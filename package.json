@@ -8,7 +8,7 @@
     "start": "npx serve ."
   },
   "keywords": ["english", "ielts", "toefl", "cambridge", "verbs", "cefr"],
-  "author": "Raphael & Irani — LogoAliii",
+  "author": "Raphael & Irani",
   "license": "MIT",
   "devDependencies": {
     "surge": "^0.30.0",

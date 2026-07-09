@@ -90,4 +90,4 @@ english-verbs-drill/
 
 ---
 
-*Built for LogoAliii (@logoaliii) — English learning content for Brazilian Portuguese speakers.*
+*English learning content for Brazilian Portuguese speakers.*
