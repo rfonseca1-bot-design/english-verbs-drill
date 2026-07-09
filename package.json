@@ -1,0 +1,17 @@
+{
+  "name": "english-verbs-drill",
+  "version": "1.0.0",
+  "description": "Interactive English verb conjugation drill — CEFR A2 to C1 with gamification",
+  "scripts": {
+    "deploy": "surge . --domain logoaliii-verbs.surge.sh",
+    "deploy:custom": "surge .",
+    "start": "npx serve ."
+  },
+  "keywords": ["english", "ielts", "toefl", "cambridge", "verbs", "cefr"],
+  "author": "Raphael & Irani — LogoAliii",
+  "license": "MIT",
+  "devDependencies": {
+    "surge": "^0.30.0",
+    "serve": "^14.2.3"
+  }
+}

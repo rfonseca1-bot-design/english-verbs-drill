@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Verbs — Full Tense Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080a10; --surface:#0f1219; --card:#13161f; --border:#1e2233; --border2:#252b3d;
+  --accent:#5ce1e6; --accent2:#ff6b6b; --accent3:#ffd166; --accent4:#a78bfa; --accent5:#f9a8d4;
+  --correct:#06d6a0; --wrong:#ef233c; --text:#dde1f0; --muted:#5a6280; --muted2:#3a4060;
+  --cpres:#4ade80; --cpast:#8ab4f8; --cfut:#5ce1e6;
+  --hd:'Syne',sans-serif; --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{height:100%;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);height:100%;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 28px 16px;flex-shrink:0;}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+header h1{font-family:var(--hd);font-size:clamp(1rem,2.5vw,1.5rem);font-weight:800;letter-spacing:-.02em;color:var(--accent);}
+header p{color:var(--muted);font-size:.7rem;margin-top:3px;}
+.score-row{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:.7rem;display:flex;gap:5px;align-items:center;}
+.chip span{color:var(--muted);}
+#sc{color:var(--correct);font-weight:700;}#sw{color:var(--wrong);font-weight:700;}#sp{color:var(--accent3);font-weight:700;}
+.prog-wrap{margin-top:9px;}
+.prog-label{font-size:.63rem;color:var(--muted);margin-bottom:4px;}
+.prog-track{background:var(--border);border-radius:3px;height:3px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--cpres),var(--cpast),var(--cfut),var(--accent4));border-radius:3px;transition:width .3s;width:0%;}
+
+/* ACTION BAR */
+.action-bar{padding:11px 28px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;}
+.btn{font-family:var(--hd);font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:7px 14px;border-radius:6px;border:none;cursor:pointer;transition:all .18s;}
+.btn-primary{background:var(--accent);color:#000;}.btn-primary:hover{background:#4dd4d9;transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted);}.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-rules{background:transparent;border:1px solid var(--border2);color:var(--accent3);}.btn-rules:hover{border-color:var(--accent3);background:rgba(255,209,102,.07);}
+.btn-red{background:transparent;border:1px solid var(--border2);color:var(--accent2);}.btn-red:hover{border-color:var(--accent2);background:rgba(239,35,60,.08);}
+.sep{width:1px;height:16px;background:var(--border2);margin:0 2px;}
+
+/* RULES PANEL */
+.rules-panel{display:none;border-bottom:1px solid var(--border);background:var(--surface);padding:18px 28px 22px;overflow-y:auto;max-height:40vh;flex-shrink:0;}
+.rules-panel.open{display:block;}
+.rules-title{font-family:var(--hd);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--accent3);margin-bottom:14px;}
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.rcard{background:var(--card);border:1px solid var(--border2);border-radius:7px;padding:12px 14px;}
+.rcard-head{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.rbadge{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+.rformula{background:rgba(0,0,0,.3);border:1px solid var(--border2);border-radius:4px;padding:5px 9px;font-size:.71rem;color:var(--accent);margin-bottom:6px;font-style:italic;}
+.rusage{font-size:.68rem;color:var(--accent3);background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.15);border-radius:4px;padding:4px 8px;margin-bottom:6px;line-height:1.5;}
+.rdesc{font-size:.7rem;color:var(--text);line-height:1.55;margin-bottom:6px;}
+.rexs{display:flex;flex-direction:column;gap:3px;}
+.rex{font-size:.67rem;background:rgba(255,255,255,.025);border-left:2px solid var(--border2);padding:3px 7px;border-radius:0 3px 3px 0;line-height:1.5;}
+.rex b{color:var(--accent3);} .rex em{color:var(--correct);font-style:normal;} .rex .x{color:var(--wrong);text-decoration:line-through;} .rex .neg{color:var(--wrong);font-weight:700;} .rex .qst{color:var(--accent);font-weight:700;}
+/* badge colours */
+.b-tr{background:rgba(249,168,212,.15);color:var(--accent5);}
+.b-ps{background:rgba(74,222,128,.15);color:var(--cpres);}
+.b-pc{background:rgba(74,222,128,.12);color:var(--cpres);}
+.b-pperf{background:rgba(74,222,128,.10);color:var(--cpres);}
+.b-past{background:rgba(138,180,248,.15);color:var(--cpast);}
+.b-pp{background:rgba(138,180,248,.12);color:var(--cpast);}
+.b-pastc{background:rgba(138,180,248,.10);color:var(--cpast);}
+.b-pastperf{background:rgba(138,180,248,.08);color:var(--cpast);}
+.b-fs{background:rgba(92,225,230,.15);color:var(--cfut);}
+.b-fc{background:rgba(92,225,230,.12);color:var(--cfut);}
+.b-fp{background:rgba(92,225,230,.10);color:var(--cfut);}
+.b-ppc  {background:rgba(74,222,128,.07); color:var(--cpres);}
+.b-pastpc{background:rgba(138,180,248,.06);color:var(--cpast);}
+.b-fpc{background:rgba(167,139,250,.15);color:var(--accent4);}
+
+/* LEGEND */
+.legend{padding:9px 28px;display:flex;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--border);flex-shrink:0;}
+.leg{display:flex;align-items:center;gap:5px;font-size:.63rem;color:var(--muted);}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* TABLE */
+.table-outer{flex:1;overflow-y:auto;overflow-x:auto;min-height:0;}
+table{width:100%;border-collapse:collapse;}
+/* group header row */
+tr.gh th{font-family:var(--hd);font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:7px 4px 5px;background:var(--surface);position:sticky;top:0;z-index:3;}
+tr.gh .g-tr{color:var(--accent5);border-bottom:2px solid var(--accent5);}
+tr.gh .g-pres{color:var(--cpres);border-bottom:2px solid var(--cpres);}
+tr.gh .g-past{color:var(--cpast);border-bottom:2px solid var(--cpast);}
+tr.gh .g-fut{color:var(--cfut);border-bottom:2px solid var(--cfut);}
+/* col header row */
+tr.ch{border-bottom:2px solid var(--border2);}
+tr.ch th{font-family:var(--hd);font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;padding:8px 8px 8px 10px;text-align:left;white-space:nowrap;background:var(--surface);position:sticky;top:26px;z-index:3;}
+.th-n{color:var(--muted2);width:32px;}
+.th-base{color:var(--accent3);}
+.th-sub{display:block;font-size:.54rem;font-weight:400;color:var(--muted);margin-top:1px;letter-spacing:.03em;text-transform:none;font-family:var(--mono);font-style:italic;}
+/* column group separators */
+.sep-tr th,.sep-pres th,.sep-past th,.sep-fut th{}
+.bdr-l{border-left:1px solid var(--border2);}
+
+tbody tr.verb-row{border-bottom:1px solid var(--border);transition:background .12s;}
+tbody tr.verb-row:hover{background:rgba(255,255,255,.015);}
+td{padding:6px 8px 6px 10px;vertical-align:middle;font-size:.78rem;}
+.td-n{color:var(--muted2);font-size:.63rem;}
+.td-base{font-weight:500;color:var(--accent3);white-space:nowrap;}
+
+/* inputs */
+.ci{position:relative;}
+.ci input{background:var(--card);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:.72rem;padding:4px 22px 4px 7px;width:100%;min-width:80px;outline:none;transition:border-color .18s,box-shadow .18s,background .18s;}
+.ci input::placeholder{color:var(--muted2);font-style:italic;font-size:.65rem;}
+.ci input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(92,225,230,.1);background:var(--surface);}
+.ci input.ok{border-color:var(--correct)!important;background:rgba(6,214,160,.07)!important;color:var(--correct);}
+.ci input.err{border-color:var(--wrong)!important;background:rgba(239,35,60,.06)!important;color:var(--wrong);}
+.ci .ico{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:.72rem;pointer-events:none;display:none;}
+.ci input.ok ~ .ico.ok{display:block;} .ci input.err ~ .ico.err{display:block;}
+/* group tint on inputs */
+.ci.g-tr input{border-color:rgba(249,168,212,.2);}
+.ci.g-tr input:focus{border-color:var(--accent5);box-shadow:0 0 0 2px rgba(249,168,212,.1);}
+.ci.g-pres input{border-color:rgba(74,222,128,.15);}
+.ci.g-pres input:focus{border-color:var(--cpres);box-shadow:0 0 0 2px rgba(74,222,128,.1);}
+.ci.g-past input{border-color:rgba(138,180,248,.15);}
+.ci.g-past input:focus{border-color:var(--cpast);box-shadow:0 0 0 2px rgba(138,180,248,.1);}
+
+/* feedback rows */
+tr.fb-row{display:none;} tr.fb-row.on{display:table-row;}
+tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,60,.18);padding:8px 10px;}
+.fb-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.fb-block{flex:1;min-width:180px;max-width:310px;background:var(--card);border:1px solid var(--border2);border-radius:6px;overflow:hidden;}
+.fb-top{padding:7px 10px 6px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.fb-badge{font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 7px;border-radius:10px;}
+.fb-typed{font-size:.68rem;color:var(--muted);font-style:italic;} .fb-typed em{color:var(--accent2);}
+.fb-body{padding:8px 10px;}
+.fb-rt{font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px;}
+.fb-formula{background:rgba(0,0,0,.3);border:1px solid var(--border2);border-radius:3px;padding:4px 8px;font-size:.7rem;color:var(--accent);margin-bottom:6px;font-style:italic;}
+.fb-usage{font-size:.67rem;color:var(--accent3);background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.14);border-radius:3px;padding:3px 7px;margin-bottom:6px;line-height:1.5;}
+.fb-desc{font-size:.69rem;color:var(--text);line-height:1.5;margin-bottom:6px;}
+.fb-exs{display:flex;flex-direction:column;gap:2px;}
+.fb-ex{font-size:.66rem;background:rgba(255,255,255,.025);border-left:2px solid var(--border2);padding:2px 7px;border-radius:0 3px 3px 0;line-height:1.5;}
+.fb-ex b{color:var(--accent3);} .fb-ex em{color:var(--correct);font-style:normal;} .fb-ex .x{color:var(--wrong);text-decoration:line-through;} .fb-ex .neg{color:var(--wrong);font-weight:700;} .fb-ex .qst{color:var(--accent);font-weight:700;}
+.fb-opts{background:rgba(255,209,102,.07);border:1px solid rgba(255,209,102,.2);border-radius:4px;padding:5px 8px;font-size:.67rem;color:var(--accent3);line-height:1.5;margin-bottom:6px;}
+.fb-opts strong{color:#ffe08a;}
+
+/* sub-field stacked inputs */
+.sub-wrap{position:relative;display:flex;align-items:center;gap:4px;}
+.sub-wrap+.sub-wrap{margin-top:3px;}
+.sub-num{font-size:.56rem;font-weight:700;color:var(--muted2);min-width:12px;text-align:right;flex-shrink:0;}
+.sub-wrap .ico{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:.72rem;pointer-events:none;display:none;}
+.sub-wrap input.ok ~.ico.ok{display:block;}
+.sub-wrap input.err~.ico.err{display:block;}
+
+@media(max-width:600px){header,.action-bar,.legend,.rules-panel{padding-left:12px;padding-right:12px;}}
+
+/* ── LEVEL TABS ──────────────────────────────────────────── */
+.level-bar{display:flex;gap:6px;padding:10px 28px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;flex-wrap:wrap;}
+.ltab{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left;transition:all .2s;position:relative;overflow:hidden;}
+.ltab:hover{border-color:var(--muted);}
+.ltab.active{border-color:var(--accent);background:rgba(92,225,230,.07);}
+.ltab-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:2px;}
+.ltab-name{font-family:var(--hd);font-size:.85rem;font-weight:800;letter-spacing:-.01em;}
+.ltab-desc{font-size:.62rem;color:var(--muted);font-family:var(--mono);}
+.ltab-count{font-size:.6rem;color:var(--muted2);}
+.ltab-prog{height:2px;background:var(--border2);border-radius:2px;margin-top:5px;overflow:hidden;}
+.ltab-fill{height:100%;border-radius:2px;transition:width .4s ease;width:0%;}
+.ltab[data-lv="A2"] .ltab-name{color:#4ade80;}
+.ltab[data-lv="A2"] .ltab-fill{background:#4ade80;}
+.ltab[data-lv="A2"].active{border-color:#4ade80;background:rgba(74,222,128,.07);}
+.ltab[data-lv="B1"] .ltab-name{color:#60a5fa;}
+.ltab[data-lv="B1"] .ltab-fill{background:#60a5fa;}
+.ltab[data-lv="B1"].active{border-color:#60a5fa;background:rgba(96,165,250,.07);}
+.ltab[data-lv="B2"] .ltab-name{color:#f59e0b;}
+.ltab[data-lv="B2"] .ltab-fill{background:#f59e0b;}
+.ltab[data-lv="B2"].active{border-color:#f59e0b;background:rgba(245,158,11,.07);}
+.ltab[data-lv="C1"] .ltab-name{color:#a78bfa;}
+.ltab[data-lv="C1"] .ltab-fill{background:#a78bfa;}
+.ltab[data-lv="C1"].active{border-color:#a78bfa;background:rgba(167,139,250,.07);}
+
+/* ── STATIVE WARNING ─────────────────────────────────────── */
+.ci.stative-cell input{border-color:rgba(245,158,11,.3)!important;}
+.ci.stative-cell input:focus{border-color:rgba(245,158,11,.7)!important;box-shadow:0 0 0 2px rgba(245,158,11,.12)!important;}
+.stative-note{font-size:.56rem;color:rgba(245,158,11,.8);margin-bottom:2px;letter-spacing:.02em;}
+
+/* ── LEVEL BADGE IN TABLE ────────────────────────────────── */
+.td-base .lvl-badge{font-size:.5rem;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:5px;vertical-align:middle;}
+.lb-A2{background:rgba(74,222,128,.15);color:#4ade80;}
+.lb-B1{background:rgba(96,165,250,.15);color:#60a5fa;}
+.lb-B2{background:rgba(245,158,11,.15);color:#f59e0b;}
+.lb-C1{background:rgba(167,139,250,.15);color:#a78bfa;}
+
+
+/* ── PRACTICE SENTENCES ──────────────────────────────────── */
+.prac-btn{font-size:.55rem;background:rgba(92,225,230,.1);border:1px solid rgba(92,225,230,.25);color:var(--accent);border-radius:3px;padding:1px 5px;cursor:pointer;margin-top:2px;display:block;width:100%;transition:all .18s;font-family:var(--mono);}
+.prac-btn:hover,.prac-btn.open{background:var(--accent);color:#000;}
+.practice-row{display:none;}
+.practice-row.open{display:table-row;}
+.practice-row>td{background:rgba(74,222,128,.03);border-top:1px solid rgba(74,222,128,.15);border-bottom:2px solid rgba(74,222,128,.2);padding:10px 14px;}
+.prac-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.prac-title{font-family:var(--hd);font-size:.72rem;font-weight:700;color:var(--cpres);}
+.prac-hint{font-size:.63rem;color:var(--muted);}
+.prac-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.prac-item{flex:1;min-width:240px;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;}
+.prac-label{font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:5px;padding:1px 6px;border-radius:8px;display:inline-block;}
+.prac-sent{display:flex;align-items:center;gap:3px;font-size:.76rem;flex-wrap:wrap;margin-top:4px;}
+.prac-part{color:var(--text);}
+.prac-wrap{position:relative;display:inline-flex;align-items:center;gap:3px;}
+.prac-inp{background:var(--surface);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:var(--mono);font-size:.72rem;padding:3px 22px 3px 7px;width:140px;outline:none;transition:border-color .18s;}
+.prac-inp:focus{border-color:var(--accent);}
+.prac-inp.ok{border-color:var(--correct)!important;background:rgba(6,214,160,.07)!important;color:var(--correct);}
+.prac-inp.err{border-color:var(--wrong)!important;background:rgba(239,35,60,.06)!important;color:var(--wrong);}
+.prac-ico{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:.72rem;display:none;}
+.prac-inp.ok~.prac-ico.ok,.prac-inp.err~.prac-ico.err{display:block;}
+.prac-ico.ok{color:var(--correct);}.prac-ico.err{color:var(--wrong);}
+.prac-feedback{font-size:.64rem;color:var(--wrong);margin-top:3px;display:none;}
+.prac-inp.err~.prac-feedback{display:block;}
+.prac-stative{font-size:.57rem;color:rgba(245,158,11,.8);margin-top:2px;}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div>
+      <h1>⬡ English Verbs — Complete Tense Drill</h1>
+      <p>Preencha todos os tempos verbais: Presente, Passado e Futuro.</p>
+    </div>
+    <div class="score-row">
+      <div class="chip">✓ <span>Corretos:</span><span id="sc">0</span></div>
+      <div class="chip">✗ <span>Erros:</span><span id="sw">0</span></div>
+      <div class="chip">— <span>Pendentes:</span><span id="sp">0</span></div>
+    </div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-label" id="prog-lbl">0 / 0 preenchidos</div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<div class="action-bar">
+  <button class="btn btn-primary" onclick="checkAll()">✓ Verificar Tudo</button>
+  <div class="sep"></div>
+  <button class="btn btn-rules" onclick="toggleRules()" id="rules-btn">📖 Ver Regras</button>
+  <button class="btn btn-ghost" onclick="revealAll()">👁 Ver Respostas</button>
+  <button class="btn btn-red"   onclick="resetAll()">↺ Resetar</button>
+</div>
+
+<div class="level-bar" id="level-bar">
+  <button class="ltab active" data-lv="A2" onclick="setLevel('A2')">
+    <div class="ltab-top">
+      <span class="ltab-name">A2</span>
+      <span class="ltab-desc">Beginner</span>
+      <span class="ltab-count" id="lc-A2">20 verbos</span>
+    </div>
+    <div class="ltab-prog"><div class="ltab-fill" id="lf-A2"></div></div>
+  </button>
+  <button class="ltab" data-lv="B1" onclick="setLevel('B1')">
+    <div class="ltab-top">
+      <span class="ltab-name">B1</span>
+      <span class="ltab-desc">Intermediate</span>
+      <span class="ltab-count" id="lc-B1">25 verbos</span>
+    </div>
+    <div class="ltab-prog"><div class="ltab-fill" id="lf-B1"></div></div>
+  </button>
+  <button class="ltab" data-lv="B2" onclick="setLevel('B2')">
+    <div class="ltab-top">
+      <span class="ltab-name">B2</span>
+      <span class="ltab-desc">Upper-Int</span>
+      <span class="ltab-count" id="lc-B2">30 verbos</span>
+    </div>
+    <div class="ltab-prog"><div class="ltab-fill" id="lf-B2"></div></div>
+  </button>
+  <button class="ltab" data-lv="C1" onclick="setLevel('C1')">
+    <div class="ltab-top">
+      <span class="ltab-name">C1</span>
+      <span class="ltab-desc">Advanced · IELTS</span>
+      <span class="ltab-count" id="lc-C1">39 verbos</span>
+    </div>
+    <div class="ltab-prog"><div class="ltab-fill" id="lf-C1"></div></div>
+  </button>
+</div>
+
+<!-- ══ RULES PANEL ══════════════════════════════════════════════════ -->
+<div class="rules-panel" id="rules-panel">
+  <div class="rules-title">📖 Regras de Preenchimento — Referência Completa</div>
+  <div class="rules-grid">
+
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-tr">Tradução (PT)</span></div>
+      <div class="rformula">qualquer equivalente correto em português</div>
+      <div class="rusage">📌 Acentos são opcionais. Sinônimos aceitos.</div>
+      <div class="rdesc">Escreva o significado principal. Múltiplas opções são aceitas.</div>
+      <div class="rexs">
+        <div class="rex"><b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em></div>
+        <div class="rex"><b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em></div>
+        <div class="rex"><b>run</b> → <em>correr</em> ou <em>executar</em></div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-ps">Present Simple (3ª pessoa)</span></div>
+      <div class="rformula">base + s / es / ies</div>
+      <div class="rusage">📌 Ações habituais, rotinas, verdades universais.</div>
+      <div class="rdesc">Padrão: <b>+s</b>. Termina em <b>-ch/-sh/-s/-x/-z</b>: <b>+es</b>. Consoante+y: <b>y → ies</b>. Irregulares: have→<em>has</em>, be→<em>is</em>, do→<em>does</em>.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)</div>
+        <div class="rex"><span class="qst">?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pc">Present Continuous</span></div>
+      <div class="rformula">is / am / are + verbo-ing</div>
+      <div class="rusage">📌 Ação em progresso AGORA, situação temporária, planos futuros confirmados, tendências em curso. <b>⚠ Stative verbs</b> não usam Continuous: know, want, love, believe, see, hear...</div>
+      <div class="rdesc">Regras do <b>-ing</b> (todos os Continuous):<br>
+      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
+      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
+      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
+      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
+      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
+      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)</div>
+        <div class="rex"><span class="qst">?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pperf">Present Perfect</span></div>
+      <div class="rformula">have / has + past participle</div>
+      <div class="rusage">📌 Experiência de vida (ever/never), ação que continua no presente (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido (yesterday, in 2020) → Simple Past.</div>
+      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp). Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)</div>
+        <div class="rex"><span class="qst">?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-ppc">Present Perf. Continuous</span></div>
+      <div class="rformula">have / has + been + verbo-ing</div>
+      <div class="rusage">📌 Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.</div>
+      <div class="rdesc">Diferença: <b>has worked</b> → foco no resultado (quantos). <b>has been working</b> → foco na duração (quanto tempo).<br>Regras do <b>-ing</b> (todos os Continuous):<br>
+      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
+      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
+      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
+      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
+      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
+      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)</div>
+        <div class="rex"><span class="qst">?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-past">Simple Past</span></div>
+      <div class="rformula">Regular: base + -ed  |  Irregular: forma própria</div>
+      <div class="rusage">📌 Ações concluídas em tempo definido no passado.</div>
+      <div class="rdesc">Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)</div>
+        <div class="rex"><span class="qst">?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pp">Past Participle</span></div>
+      <div class="rformula">Regular: = Simple Past  |  Irregular: pode diferir</div>
+      <div class="rusage">📌 Usado em todos os tempos Perfect (has/have/had/will have + pp).</div>
+      <div class="rdesc">Para verbos regulares, pp = simple past. Irregulares: pode ser igual ao past, igual à base, ou forma única.</div>
+      <div class="rexs">
+        <div class="rex"><b>work</b> → past: <em>worked</em> → pp: <em>worked</em> (regular: igual)</div>
+        <div class="rex"><b>go</b> → past: <em>went</em> → pp: <em>gone</em> (irregular: diferente)</div>
+        <div class="rex"><b>cut</b> → past: <em>cut</em> → pp: <em>cut</em> (irregular: igual à base)</div>
+        <div class="rex"><b>write</b> → past: <em>wrote</em> → pp: <em>written</em> (irregular)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pastc">Past Continuous</span></div>
+      <div class="rformula">was / were + verbo-ing</div>
+      <div class="rusage">📌 Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. <em>was</em> → I/he/she/it · <em>were</em> → you/we/they</div>
+      <div class="rdesc">Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)</div>
+        <div class="rex"><span class="qst">?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pastpc">Past Perf. Continuous</span></div>
+      <div class="rformula">had been + verbo-ing</div>
+      <div class="rusage">📌 Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.</div>
+      <div class="rdesc">Combina 'passado do passado' com aspecto contínuo. Sempre acompanhado de outro evento em Simple Past.<br>Regras do <b>-ing</b> (todos os Continuous):<br>
+      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
+      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
+      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
+      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
+      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
+      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)</div>
+        <div class="rex"><span class="qst">?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-pastperf">Past Perfect</span></div>
+      <div class="rformula">had + past participle</div>
+      <div class="rusage">📌 'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina ordem cronológica.</div>
+      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp). Indica que algo ocorreu <em>antes</em> de outro evento passado.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)</div>
+        <div class="rex"><span class="qst">?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-fs">Future Simple</span></div>
+      <div class="rformula">will + verbo base (sem conjugar)</div>
+      <div class="rusage">📌 Previsões, decisões tomadas no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito ou evidência visível.</div>
+      <div class="rdesc">Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)</div>
+        <div class="rex"><span class="qst">?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-fc">Future Continuous</span></div>
+      <div class="rformula">will be + verbo-ing</div>
+      <div class="rusage">📌 Ação em andamento em momento específico do futuro.</div>
+      <div class="rdesc">Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)</div>
+        <div class="rex"><span class="qst">?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-fp">Future Perfect</span></div>
+      <div class="rformula">will have + past participle</div>
+      <div class="rusage">📌 Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.</div>
+      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp).</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)</div>
+        <div class="rex"><span class="qst">?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)</div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge b-fpc">Future Perf. Continuous</span></div>
+      <div class="rformula">will have been + verbo-ing</div>
+      <div class="rusage">📌 Duração de ação até momento futuro específico.</div>
+      <div class="rdesc">Combina Future Perfect + Continuous. Mesmas regras de formação do <b>-ing</b>.</div>
+      <div class="rexs">
+        <div class="rex"><b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)</div>
+        <div class="rex"><span class="neg">−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)</div>
+        <div class="rex"><span class="qst">?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)</div>
+      </div>
+    </div>
+  </div><!-- rules-grid -->
+</div><!-- rules-panel -->
+
+<div class="legend">
+  <div class="leg"><div class="dot" style="background:var(--accent3)"></div>Base (dado)</div>
+  <div class="leg"><div class="dot" style="background:var(--accent5)"></div>Tradução</div>
+  <div class="leg"><div class="dot" style="background:var(--cpres)"></div>Presente</div>
+  <div class="leg"><div class="dot" style="background:var(--cpast)"></div>Passado</div>
+  <div class="leg"><div class="dot" style="background:var(--cfut)"></div>Futuro</div>
+  <div class="leg"><div class="dot" style="background:var(--correct)"></div>Correto</div>
+  <div class="leg"><div class="dot" style="background:var(--wrong)"></div>Erro</div>
+</div>
+
+<div class="table-outer">
+<table id="tbl">
+  <thead>
+    <!-- GROUP HEADER -->
+    <tr class="gh">
+      <th colspan="2"></th>
+      <th class="g-tr">Tradução</th>
+      <th class="g-pres bdr-l" colspan="4">Present Tenses</th>
+      <th class="g-past bdr-l" colspan="5">Past Tenses</th>
+      <th class="g-fut bdr-l" colspan="4">Future Tenses</th>
+    </tr>
+    <!-- COLUMN HEADER -->
+    <tr class="ch">
+      <th class="th-n">#</th>
+      <th style="color:var(--accent3)">Base<span class="th-sub">dado</span></th>
+      <th style="color:var(--accent5)">Tradução (PT)<span class="th-sub">preencher</span></th>
+      <th class="bdr-l" style="color:var(--cpres)">Present Simple<span class="th-sub">base+s/es/ies · 3ª pessoa</span></th>
+      <th style="color:var(--cpres)">Present Continuous<span class="th-sub">is + -ing</span></th>
+      <th style="color:var(--cpres)">Present Perfect<span class="th-sub">has + p.p.</span></th>
+      <th style="color:var(--cpres)">Present Perf. Cont.<span class="th-sub">has been + -ing</span></th>
+      <th class="bdr-l" style="color:var(--cpast)">Simple Past<span class="th-sub">preencher</span></th>
+      <th style="color:var(--cpast)">Past Participle<span class="th-sub">preencher</span></th>
+      <th style="color:var(--cpast)">Past Continuous<span class="th-sub">was/were + -ing</span></th>
+      <th style="color:var(--cpast)">Past Perf. Cont.<span class="th-sub">had been + -ing</span></th>
+      <th style="color:var(--cpast)">Past Perfect<span class="th-sub">had + p.p.</span></th>
+      <th class="bdr-l" style="color:var(--cfut)">Future Simple<span class="th-sub">will + base</span></th>
+      <th style="color:var(--cfut)">Future Continuous<span class="th-sub">will be + -ing</span></th>
+      <th style="color:var(--cfut)">Future Perfect<span class="th-sub">will have + p.p.</span></th>
+      <th style="color:var(--accent4)">Future Perf. Cont.<span class="th-sub">will have been + -ing</span></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+// ── VERB DATA ────────────────────────────────────────────────────────
+// [base, simple_past, past_participle, type, translations_pt (comma-sep)]
+const VERBS = [
+  ["be","was,were","been","irregular","ser,estar,ficar,existir","A2"],
+  ["have","had","had","irregular","ter,possuir,haver","A2"],
+  ["do","did","done","irregular","fazer,realizar,executar","A2"],
+  ["say","said","said","irregular","dizer,falar,afirmar","A2"],
+  ["go","went","gone","irregular","ir,partir,andar","A2"],
+  ["get","got","got,gotten","irregular","obter,conseguir,pegar,receber","A2"],
+  ["make","made","made","irregular","fazer,criar,produzir","A2"],
+  ["know","knew","known","irregular","saber,conhecer","A2",true],
+  ["think","thought","thought","irregular","pensar,achar,considerar","A2"],
+  ["take","took","taken","irregular","pegar,levar,tomar","A2"],
+  ["see","saw","seen","irregular","ver,enxergar,perceber","A2"],
+  ["come","came","come","irregular","vir,chegar,aparecer","A2"],
+  ["want","wanted","wanted","regular","querer,desejar","A2",true],
+  ["look","looked","looked","regular","olhar,parecer,ver","A2"],
+  ["use","used","used","regular","usar,utilizar,empregar","A2"],
+  ["find","found","found","irregular","encontrar,achar,descobrir","A2"],
+  ["give","gave","given","irregular","dar,entregar,oferecer","A2"],
+  ["work","worked","worked","regular","trabalhar,funcionar","A2"],
+  ["call","called","called","regular","chamar,ligar,telefonar","A2"],
+  ["play","played","played","regular","jogar,brincar,tocar","A2"],
+  ["tell","told","told","irregular","contar,dizer,informar","B1"],
+  ["try","tried","tried","regular","tentar,experimentar","B1"],
+  ["ask","asked","asked","regular","perguntar,pedir,solicitar","B1"],
+  ["need","needed","needed","regular","precisar,necessitar","B1",true],
+  ["feel","felt","felt","irregular","sentir,perceber,se sentir","B1"],
+  ["become","became","become","irregular","tornar-se,ficar,virar","B1"],
+  ["leave","left","left","irregular","sair,deixar,partir,abandonar","B1"],
+  ["put","put","put","irregular","colocar,por,depositar,botar","B1"],
+  ["mean","meant","meant","irregular","significar,querer dizer","B1",true],
+  ["keep","kept","kept","irregular","manter,guardar,continuar","B1"],
+  ["let","let","let","irregular","deixar,permitir","B1"],
+  ["begin","began","begun","irregular","comecar,iniciar","B1"],
+  ["hear","heard","heard","irregular","ouvir,escutar","B1"],
+  ["run","ran","run","irregular","correr,executar,administrar","B1"],
+  ["move","moved","moved","regular","mover,mudar,mexer","B1"],
+  ["live","lived","lived","regular","viver,morar,habitar","B1"],
+  ["hold","held","held","irregular","segurar,manter,conter","B1"],
+  ["bring","brought","brought","irregular","trazer,levar","B1"],
+  ["happen","happened","happened","regular","acontecer,ocorrer","B1"],
+  ["write","wrote","written","irregular","escrever,redigir","B1"],
+  ["sit","sat","sat","irregular","sentar,sentar-se","B1"],
+  ["stand","stood","stood","irregular","ficar de pe,suportar,aguentar","B1"],
+  ["lose","lost","lost","irregular","perder,desperdicar","B1"],
+  ["pay","paid","paid","irregular","pagar,remunerar","B1"],
+  ["follow","followed","followed","regular","seguir,acompanhar,obedecer","B1"],
+  ["meet","met","met","irregular","encontrar,conhecer,reunir-se","B2"],
+  ["include","included","included","regular","incluir,abranger,conter","B2",true],
+  ["continue","continued","continued","regular","continuar,prosseguir","B2"],
+  ["set","set","set","irregular","definir,colocar,configurar,estabelecer","B2"],
+  ["learn","learned,learnt","learned,learnt","regular","aprender,descobrir","B2"],
+  ["change","changed","changed","regular","mudar,alterar,transformar","B2"],
+  ["lead","led","led","irregular","liderar,conduzir,guiar","B2"],
+  ["understand","understood","understood","irregular","entender,compreender","B2",true],
+  ["watch","watched","watched","regular","assistir,observar,ver","B2"],
+  ["stop","stopped","stopped","regular","parar,interromper,cessar","B2"],
+  ["create","created","created","regular","criar,desenvolver,elaborar","B2"],
+  ["speak","spoke","spoken","irregular","falar,discursar,conversar","B2"],
+  ["read","read","read","irregular","ler,interpretar","B2"],
+  ["spend","spent","spent","irregular","gastar,passar","B2"],
+  ["grow","grew","grown","irregular","crescer,cultivar,aumentar","B2"],
+  ["open","opened","opened","regular","abrir,inaugurar","B2"],
+  ["walk","walked","walked","regular","andar,caminhar,passear","B2"],
+  ["win","won","won","irregular","ganhar,vencer","B2"],
+  ["offer","offered","offered","regular","oferecer,propor","B2"],
+  ["remember","remembered","remembered","regular","lembrar,recordar","B2"],
+  ["consider","considered","considered","regular","considerar,ponderar,avaliar","B2"],
+  ["appear","appeared","appeared","regular","aparecer,parecer,surgir","B2",true],
+  ["buy","bought","bought","irregular","comprar,adquirir","B2"],
+  ["wait","waited","waited","regular","esperar,aguardar","B2"],
+  ["serve","served","served","regular","servir,atender","B2"],
+  ["send","sent","sent","irregular","enviar,mandar,expedir","B2"],
+  ["build","built","built","irregular","construir,edificar,erguer","B2"],
+  ["fall","fell","fallen","irregular","cair,tombar","B2"],
+  ["cut","cut","cut","irregular","cortar,reduzir,aparar","B2"],
+  ["pull","pulled","pulled","regular","puxar,arrastar,retirar","B2"],
+  ["seem","seemed","seemed","regular","parecer,aparentar","C1",true],
+  ["show","showed","shown","irregular","mostrar,exibir,demonstrar","C1"],
+  ["provide","provided","provided","regular","fornecer,prover,oferecer","C1"],
+  ["believe","believed","believed","regular","acreditar,crer","C1",true],
+  ["require","required","required","regular","exigir,requerer,necessitar","C1",true],
+  ["report","reported","reported","regular","relatar,reportar,informar","C1"],
+  ["decide","decided","decided","regular","decidir,resolver,determinar","C1"],
+  ["break","broke","broken","irregular","quebrar,romper,partir","C1"],
+  ["receive","received","received","regular","receber,obter","C1"],
+  ["agree","agreed","agreed","regular","concordar,aceitar,consentir","C1"],
+  ["support","supported","supported","regular","apoiar,suportar,sustentar","C1"],
+  ["hit","hit","hit","irregular","bater,acertar,golpear","C1"],
+  ["produce","produced","produced","regular","produzir,gerar,fabricar","C1"],
+  ["eat","ate","eaten","irregular","comer,ingerir","C1"],
+  ["cover","covered","covered","regular","cobrir,tampar,abranger","C1"],
+  ["catch","caught","caught","irregular","pegar,capturar,apanhar","C1"],
+  ["draw","drew","drawn","irregular","desenhar,tracar,puxar","C1"],
+  ["choose","chose","chosen","irregular","escolher,selecionar,optar","C1"],
+  ["drive","drove","driven","irregular","dirigir,conduzir,levar","C1"],
+  ["die","died","died","regular","morrer,falecer","C1"],
+  ["kill","killed","killed","regular","matar,eliminar","C1"],
+  ["remain","remained","remained","regular","permanecer,restar,ficar","C1",true],
+  ["suggest","suggested","suggested","regular","sugerir,propor,recomendar","C1"],
+  ["raise","raised","raised","regular","levantar,aumentar,elevar","C1"],
+  ["pass","passed","passed","regular","passar,superar,aprovar","C1"],
+  ["sell","sold","sold","irregular","vender,comercializar","C1"],
+  ["reach","reached","reached","regular","alcancar,atingir,chegar","C1"],
+  ["indicate","indicated","indicated","regular","indicar,mostrar,apontar","C1",true],
+  ["demonstrate","demonstrated","demonstrated","regular","demonstrar,provar,evidenciar","C1"],
+  ["reveal","revealed","revealed","regular","revelar,mostrar,evidenciar","C1"],
+  ["highlight","highlighted","highlighted","regular","destacar,ressaltar,enfatizar","C1"],
+  ["decline","declined","declined","regular","diminuir,declinar,recusar","C1"],
+  ["fluctuate","fluctuated","fluctuated","regular","flutuar,variar,oscilar","C1"],
+  ["predict","predicted","predicted","regular","prever,predizer,antecipar","C1"],
+  ["conclude","concluded","concluded","regular","concluir,deduzir","C1"],
+  ["analyze","analyzed","analyzed","regular","analisar,examinar","C1"],
+  ["establish","established","established","regular","estabelecer,comprovar,criar","C1"],
+  ["contribute","contributed","contributed","regular","contribuir,colaborar","C1"],
+  ["achieve","achieved","achieved","regular","alcancar,conquistar,atingir","C1"]
+];
+
+// ── ING FORM (corrected & complete rules) ───────────────────────────
+// Rule 5/6: double only for monosyllabic CVC or stress-on-final CVC; never w/x/y
+const DBL = new Set(["run","sit","cut","hit","put","set","get","let","begin","stop","win","plan",
+  "drop","swim","bat","bet","bid","beg","bus","dig","dip","fit","gag","grip","hop","hug",
+  "jog","jot","knit","log","map","mop","nap","nod","pat","peg","pet","pin","pop","pot",
+  "rub","rug","rut","sap","sip","sob","tag","tan","tap","tip","tug","wed","whet","whip","zip"]);
+
+function toIng(v){
+  if(v==="be")  return "being";
+  if(v==="die") return "dying";   // Rule 4: -ie → -ying
+  if(v==="lie") return "lying";
+  if(v==="tie") return "tying";
+  if(v.endsWith("ie")) return v.slice(0,-2)+"ying";      // Rule 4
+  if(v.endsWith("ee")||v.endsWith("oe")||v.endsWith("ye")) return v+"ing"; // Rule 3: keep -ee/-oe/-ye
+  if(v.endsWith("e")&&v.length>2) return v.slice(0,-1)+"ing"; // Rule 2: drop single -e
+  if(DBL.has(v)) return v+v[v.length-1]+"ing";           // Rule 5/6: double CVC
+  return v+"ing";                                         // Rule 1: default +ing
+}
+
+// ── PRESENT SIMPLE 3rd PERSON ───────────────────────────────────────
+function toS(v){
+  if(v==="be")   return "is";
+  if(v==="have") return "has";
+  if(v==="do")   return "does";
+  if(v==="go")   return "goes";
+  const vowels="aeiou";
+  // consonant + y → -ies
+  if(v.endsWith("y")&&!vowels.includes(v[v.length-2])) return v.slice(0,-1)+"ies";
+  // sibilant endings → +es
+  if(v.endsWith("ch")||v.endsWith("sh")||v.endsWith("ss")||
+     v.endsWith("x") ||v.endsWith("z") ||v.endsWith("o")) return v+"es";
+  return v+"s";
+}
+
+// ── BUILD ALL ANSWERS ────────────────────────────────────────────────
+// withAux: handles comma-separated values like "got,gotten"
+// withAux("has","got,gotten") → "has got,has gotten"
+function withAux(aux, val){
+  return val.split(",").map(v=>`${aux} ${v.trim()}`).join(",");
+}
+
+function buildAnswers(base, past, pp, trRaw){
+  const ing = toIng(base);
+  const s3  = toS(base);
+  return {
+    tr:       trRaw,
+    ps:       s3,
+    pc:       `is ${ing}`,
+    pperf:    withAux("has", pp),
+    past:     past,
+    pp:       pp,
+    pastc:    `was ${ing}`,
+    pastperf: withAux("had", pp),
+    ppc:      `has been ${ing}`,
+    pastpc:   `had been ${ing}`,
+    fs:       `will ${base}`,
+    fc:       `will be ${ing}`,
+    fp:       withAux("will have", pp),
+    fpc:      `will have been ${ing}`
+  };
+}
+
+// ── CONSTANTS ────────────────────────────────────────────────────────
+const KEYS = ["tr","ps","pc","pperf","ppc","past","pp","pastc","pastpc","pastperf","fs","fc","fp","fpc"];
+
+const LABELS = {
+  tr:"Tradução (PT)", ps:"Present Simple", pc:"Present Continuous",
+  pperf:"Present Perfect", past:"Simple Past", pp:"Past Participle",
+  pastc:"Past Continuous", pastperf:"Past Perfect",
+  ppc:"Present Perf. Continuous", pastpc:"Past Perf. Continuous",
+  fs:"Future Simple", fc:"Future Continuous", fp:"Future Perfect", fpc:"Future Perf. Continuous"
+};
+
+const BADGE = {
+  tr:"b-tr", ps:"b-ps", pc:"b-pc", pperf:"b-pperf",
+  past:"b-past", pp:"b-pp", pastc:"b-pastc", pastperf:"b-pastperf",
+  ppc:"b-ppc", pastpc:"b-pastpc",
+  fs:"b-fs", fc:"b-fc", fp:"b-fp", fpc:"b-fpc"
+};
+
+const GROUP = {
+  tr:"g-tr", ps:"g-pres", pc:"g-pres", pperf:"g-pres",
+  past:"g-past", pp:"g-past", pastc:"g-past", pastperf:"g-past",
+  ppc:"g-pres", pastpc:"g-past",
+  fs:"g-fut", fc:"g-fut", fp:"g-fut", fpc:"g-fut"
+};
+
+// shared -ing rules text
+const ING_RULES = `Regras do <b>-ing</b>:<br>
+① Padrão: <b>+ing</b><br>
+② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br>
+③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br>
+④ Termina em <b>-ie</b>: troca -ie por <b>-ying</b> → die → dy<b>ing</b><br>
+⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br>
+⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing`;
+
+const HINTS = {
+  tr:{
+    formula:"qualquer equivalente correto em português",
+    usage:"Acentos opcionais. Sinônimos aceitos.",
+    desc:"Escreva o significado principal. Múltiplas opções são aceitas.",
+    examples:[
+      {ex:"<b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em>"},
+      {ex:"<b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em>"},
+      {ex:"<b>run</b> → <em>correr</em> ou <em>executar</em>"}
+    ]
+  },
+  ps:{
+    formula:"base + s / es / ies (3ª pessoa he/she/it)",
+    usage:"Ações habituais, rotinas e verdades universais.",
+    desc:"Padrão: <b>+s</b>. Termina em -ch/-sh/-s/-x/-z: <b>+es</b>. Consoante+y: <b>-ies</b>. Irregulares: have→has, be→is, do→does.",
+    examples:[
+      {ex:"<b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)"},
+      {ex:"<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)"},
+      {ex:"<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)"}
+    ]
+  },
+  pc:{
+    formula:"is / am / are + verbo-ing",
+    usage:"Ação em progresso AGORA, situação temporária, planos futuros confirmados. ⚠ Stative verbs não usam Continuous: know, want, love, believe, see, hear...",
+    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
+    examples:[
+      {ex:"<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)"},
+      {ex:"<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)"},
+      {ex:"<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)"}
+    ]
+  },
+  pperf:{
+    formula:"have / has + past participle",
+    usage:"Experiência de vida (ever/never), ação que continua (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido → Simple Past.",
+    desc:"Use o <b>Past Participle</b>. Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.",
+    examples:[
+      {ex:"<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)"},
+      {ex:"<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)"},
+      {ex:"<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)"}
+    ]
+  },
+  ppc:{
+    formula:"have / has + been + verbo-ing",
+    usage:"Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.",
+    desc:"Diferença: <b>has worked</b> → resultado (quantos). <b>has been working</b> → duração (quanto tempo).",
+    examples:[
+      {ex:"<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)"},
+      {ex:"<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)"},
+      {ex:"<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)"}
+    ]
+  },
+  past:{
+    formula:"Regular: base + -ed  |  Irregular: forma própria",
+    usage:"Ações concluídas em tempo definido no passado.",
+    desc:"Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.",
+    examples:[
+      {ex:"<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)"},
+      {ex:"<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)"},
+      {ex:"<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)"}
+    ]
+  },
+  pp:{
+    formula:"Regular: = Simple Past  |  Irregular: pode diferir",
+    usage:"Usado em todos os tempos Perfect (has/have/had/will have + pp).",
+    desc:"Regular: pp = simple past. Irregulares: pode ser igual ao past, à base, ou forma única.",
+    examples:[
+      {ex:"<b>work</b> → past: worked → pp: <em>worked</em> (regular)"},
+      {ex:"<b>go</b> → past: went → pp: <em>gone</em> (irregular)"},
+      {ex:"<b>write</b> → past: wrote → pp: <em>written</em> (irregular)"}
+    ]
+  },
+  pastc:{
+    formula:"was / were + verbo-ing",
+    usage:"Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. was → I/he/she/it · were → you/we/they.",
+    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
+    examples:[
+      {ex:"<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)"},
+      {ex:"<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)"},
+      {ex:"<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)"}
+    ]
+  },
+  pastpc:{
+    formula:"had been + verbo-ing",
+    usage:"Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.",
+    desc:"Combina 'passado do passado' com aspecto contínuo. Acompanhado de outro evento em Simple Past.",
+    examples:[
+      {ex:"<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)"},
+      {ex:"<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)"},
+      {ex:"<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)"}
+    ]
+  },
+  pastperf:{
+    formula:"had + past participle",
+    usage:"'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina a ordem cronológica.",
+    desc:"Use o <b>Past Participle</b>. Indica que algo ocorreu antes de outro evento passado.",
+    examples:[
+      {ex:"<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)"},
+      {ex:"<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)"},
+      {ex:"<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)"}
+    ]
+  },
+  fs:{
+    formula:"will + verbo base (sem conjugar)",
+    usage:"Previsões, decisões no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito.",
+    desc:"Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.",
+    examples:[
+      {ex:"<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)"},
+      {ex:"<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)"},
+      {ex:"<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)"}
+    ]
+  },
+  fc:{
+    formula:"will be + verbo-ing",
+    usage:"Ação em andamento em momento específico do futuro.",
+    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
+    examples:[
+      {ex:"<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)"},
+      {ex:"<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)"},
+      {ex:"<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)"}
+    ]
+  },
+  fp:{
+    formula:"will have + past participle",
+    usage:"Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.",
+    desc:"Use o <b>Past Participle</b> (coluna pp).",
+    examples:[
+      {ex:"<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)"},
+      {ex:"<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)"},
+      {ex:"<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)"}
+    ]
+  },
+  fpc:{
+    formula:"will have been + verbo-ing",
+    usage:"Duração de ação até momento futuro específico.",
+    desc:"Combina Future Perfect + Continuous. Mesmas regras de formação do -ing.",
+    examples:[
+      {ex:"<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)"},
+      {ex:"<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)"},
+      {ex:"<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)"}
+    ]
+  }
+};
+
+// ── LEVEL MANAGEMENT ────────────────────────────────────────────────
+const LEVELS = ['A2','B1','B2','C1'];
+let currentLevel = 'A2';
+let levelCorrect = {A2:0,B1:0,B2:0,C1:0};
+let levelWrong   = {A2:0,B1:0,B2:0,C1:0};
+
+function setLevel(lv){
+  if(lv === currentLevel) return;
+  currentLevel = lv;
+  document.querySelectorAll('.ltab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.lv === lv);
+  });
+  totCorrect = levelCorrect[lv];
+  totWrong   = levelWrong[lv];
+  render();
+}
+
+function updateLevelUI(){
+  LEVELS.forEach(lv => {
+    const verbs = VERBS.filter(v=>v[5]===lv);
+    const totalCells = verbs.reduce((s,v,i)=>{
+      const id=`r${VERBS.indexOf(v)}`;
+      if(!states[id]) return s;
+      return s + KEYS.reduce((ks,k)=>ks+(states[id][k]?states[id][k].length:1),0);
+    },0);
+    const okCells = verbs.reduce((s,v)=>{
+      const id=`r${VERBS.indexOf(v)}`;
+      if(!states[id]) return s;
+      return s + KEYS.reduce((ks,k)=>{
+        if(!states[id][k]) return ks;
+        return ks + states[id][k].filter(x=>x==='ok').length;
+      },0);
+    },0);
+    const pct = totalCells > 0 ? Math.round(okCells/totalCells*100) : 0;
+    const fill = document.getElementById('lf-'+lv);
+    if(fill) fill.style.width = pct+'%';
+  });
+}
+
+// ── STATE ────────────────────────────────────────────────────────────
+let states = {};
+let totCorrect=0, totWrong=0;
+
+// ── NORMALIZE ────────────────────────────────────────────────────────
+function norm(s){
+  return s.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ");
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────
+function basePH(k){
+  return {tr:"tradução",ps:"ex: works",pc:"is ...",pperf:"has ...",ppc:"has been ...",
+    past:"ex: went",pp:"ex: gone",pastc:"was ...",pastpc:"had been ...",pastperf:"had ...",
+    fs:"will ...",fc:"will be ...",fp:"will have ...",fpc:"will have been ..."}[k]||"...";
+}
+
+function getCellState(id,k){
+  const s=states[id][k];
+  if(s.every(x=>x==="empty")) return "empty";
+  if(s.every(x=>x==="ok"))    return "ok";
+  if(s.some(x=>x==="err"))    return "err";
+  return "partial";
+}
+
+
+// ── SENTENCE TEMPLATES ───────────────────────────────────────────────
+// ___ = full tense form goes here (e.g. "has worked", "will be going")
+const SENT_T = {
+  ps:      ["Every day, she ___.", "He ___ every morning.", "She usually ___ here.", "It ___ like this every time."],
+  pc:      ["Right now, she ___.", "She ___ at the moment.", "Look! He ___ right there.", "She ___ and cannot stop."],
+  pperf:   ["She ___ since last year.", "She ___ many times before.", "She ___ here for years.", "She ___ three times this week."],
+  ppc:     ["She ___ since 9 AM.", "She ___ all morning.", "She ___ for two hours now.", "She ___ all week without a break."],
+  past:    ["She ___ yesterday.", "She ___ last year.", "She ___ the day before.", "She ___ when I saw her."],
+  pastc:   ["She ___ when I called.", "She ___ all evening.", "She ___ at that exact moment.", "She ___ when it happened."],
+  pastperf:["She ___ before dinner.", "She ___ by the time I arrived.", "She ___ before it started.", "She ___ when she heard the news."],
+  pastpc:  ["She ___ for hours when I arrived.", "She ___ all week before the deadline.", "She ___ since morning when it ended.", "She ___ for years before stopping."],
+  fs:      ["She ___ tomorrow.", "I think she ___ very soon.", "She ___ next week for sure.", "She ___ next year."],
+  fc:      ["She ___ at 8 PM tomorrow.", "She ___ when you arrive.", "She ___ this time next week.", "She ___ all day tomorrow."],
+  fp:      ["By noon, she ___.", "She ___ before you arrive.", "By Friday, she ___.", "She ___ before the deadline."],
+  fpc:     ["By 5 PM, she ___ for 8 hours.", "By 2025, she ___ for a year.", "She ___ for hours by then.", "By tomorrow, she ___ for a week."]
+};
+
+const PRAC_TENSES = ['ps','pc','pperf','ppc','past','pastc','pastperf','pastpc','fs','fc','fp','fpc'];
+const PRAC_STATIVE_CONTS = new Set(['pc','pastc','pastpc','fc','fpc']);
+
+function checkPrac(el){
+  const val = norm(el.value);
+  if(!val){ el.className='prac-inp'; return; }
+  const valid = el.dataset.ans.split(',').map(a=>norm(a));
+  const ok = valid.some(a=>val===a);
+  el.classList.remove('ok','err');
+  el.classList.add(ok?'ok':'err');
+}
+
+function togglePractice(id, btn){
+  // Check if row already exists
+  let prRow = document.getElementById('pr-'+id);
+  if(prRow){
+    const isOpen = prRow.classList.contains('open');
+    prRow.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.textContent = isOpen ? '📝 Praticar' : '✕ Fechar';
+    return;
+  }
+
+  // Generate practice row
+  const verbEntry = VERBS.find((_,i)=>`r${i}`===id);
+  if(!verbEntry) return;
+  const [base,past,pp,type,trRaw,level,isStative] = verbEntry;
+  const ans = buildAnswers(base,past,pp,trRaw);
+
+  // Pick 4 random tenses (always include past + one future at least)
+  const pool = [...PRAC_TENSES].sort(()=>Math.random()-.5);
+  const selected = pool.slice(0,4);
+
+  const itemsHTML = selected.map(k=>{
+    const tmpl = SENT_T[k][Math.floor(Math.random()*SENT_T[k].length)];
+    const [before, after] = tmpl.split('___');
+    const ansRaw = ans[k];
+    const multi = ansRaw.split(',').length > 1;
+    const statWarn = isStative && PRAC_STATIVE_CONTS.has(k);
+    return `
+      <div class="prac-item">
+        <span class="prac-label ${BADGE[k]}">${LABELS[k]}</span>
+        <div class="prac-sent">
+          <span class="prac-part">${before.trim()}</span>
+          <span class="prac-wrap">
+            <input class="prac-inp" type="text"
+              data-ans="${ansRaw}" data-key="${k}"
+              placeholder="${multi?'múltiplas...' : '...'}"
+              autocomplete="off" spellcheck="false"
+              onblur="checkPrac(this)"
+              onkeydown="if(event.key==='Enter'){checkPrac(this);this.blur()}"/>
+            <span class="prac-ico ok">✓</span>
+            <span class="prac-ico err">✗</span>
+            <span class="prac-feedback">Reveja a regra na tabela acima ↑</span>
+          </span>
+          <span class="prac-part">${after.trim()}</span>
+        </div>
+        ${statWarn?'<div class="prac-stative">⚠ Verbo estativo — esta forma é raramente usada no inglês real</div>':''}
+      </div>`;
+  }).join('');
+
+  // Create row and insert after feedback row
+  prRow = document.createElement('tr');
+  prRow.className = 'practice-row open';
+  prRow.id = 'pr-'+id;
+  prRow.innerHTML = `<td colspan="16">
+    <div class="prac-header">
+      <span class="prac-title">📝 Praticar em frases — <strong>${base}</strong> <span style="font-size:.6rem;opacity:.6">[${level}]</span></span>
+      <span class="prac-hint">Complete com o tempo correto — frases renovam a cada abertura</span>
+    </div>
+    <div class="prac-grid">${itemsHTML}</div>
+  </td>`;
+
+  const fbRow = document.getElementById('fb-'+id);
+  fbRow.parentNode.insertBefore(prRow, fbRow.nextSibling);
+  btn.classList.add('open');
+  btn.textContent = '✕ Fechar';
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function render(){
+  const tbody=document.getElementById("tbody");
+  tbody.innerHTML="";
+  const levelVerbs = VERBS.filter(v=>v[5]===currentLevel);
+  levelVerbs.forEach((verbEntry, li)=>{
+    const [base,past,pp,type,trRaw,level,isStative] = verbEntry;
+    const globalIdx = VERBS.indexOf(verbEntry);
+    const id=`r${globalIdx}`;
+    const ans=buildAnswers(base,past,pp,trRaw);
+    states[id]={};
+    KEYS.forEach(k=>{
+      const opts=ans[k].split(",").map(a=>a.trim()).filter(Boolean);
+      states[id][k]=opts.map(()=>"empty");
+    });
+
+    const isLB=k=>["ps","past","fs"].includes(k);
+    const CONT_KEYS = new Set(["pc","pastc","pastpc","fc","fpc"]);
+
+    const tr=document.createElement("tr");
+    tr.className="verb-row"; tr.dataset.id=id; tr.dataset.level=level;
+    tr.innerHTML=`
+      <td class="td-n">${li+1}<button class="prac-btn" onclick="togglePractice('${id}',this)">📝 Praticar</button></td>
+      <td class="td-base">${base}<span class="lvl-badge lb-${level}">${level}</span></td>
+      ${KEYS.map(k=>{
+        const opts=ans[k].split(",").map(a=>a.trim()).filter(Boolean);
+        const multi=opts.length>1;
+        const showStatWarn = isStative && CONT_KEYS.has(k);
+        return `<td class="ci ${GROUP[k]}${isLB(k)?" bdr-l":""}${showStatWarn?" stative-cell":""}">
+          ${showStatWarn?`<div class="stative-note">⚠ estativo</div>`:""}
+          ${opts.map((opt,si)=>`
+            <div class="sub-wrap">
+              ${multi?`<span class="sub-num">${si+1}</span>`:""}
+              <input id="${id}-${k}-${si}" type="text"
+                placeholder="${multi?`${si+1}ª forma...`:basePH(k)+"..."}"
+                data-ans="${opt}" data-key="${k}" data-id="${id}" data-si="${si}"
+                autocomplete="off" spellcheck="false"
+                onblur="checkCell(this)"
+                onkeydown="if(event.key==='Enter'){checkCell(this);this.blur()}"/>`
+            + `<span class="ico ok">✓</span><span class="ico err">✗</span></div>`).join("")}
+        </td>`;
+      }).join("")}`;
+    tbody.appendChild(tr);
+
+    const fb=document.createElement("tr");
+    fb.className="fb-row"; fb.id=`fb-${id}`;
+    fb.innerHTML=`<td colspan="16"><div class="fb-grid" id="fbg-${id}"></div></td>`;
+    tbody.appendChild(fb);
+  });
+  updateMeta();
+}
+
+// ── CHECK ─────────────────────────────────────────────────────────────
+function checkCell(el){
+  const val=norm(el.value);
+  const id=el.dataset.id, k=el.dataset.key, si=parseInt(el.dataset.si);
+
+  const prevCell=getCellState(id,k);
+  const rowEl = document.querySelector(`tr[data-id="${id}"]`);
+  const lv = rowEl ? rowEl.dataset.level : currentLevel;
+
+  if(!val){
+    el.className="";
+    states[id][k][si]="empty";
+  } else {
+    const isOk=(val===norm(el.dataset.ans));
+    el.classList.remove("ok","err");
+    el.classList.add(isOk?"ok":"err");
+    states[id][k][si]=isOk?"ok":"err";
+  }
+
+  const newCell=getCellState(id,k);
+  const wasOk=prevCell==="ok", nowOk=newCell==="ok";
+  const wasErr=prevCell==="err", nowErr=newCell==="err";
+
+  if(wasOk &&!nowOk){ totCorrect--; levelCorrect[lv]--; }
+  if(!wasOk&& nowOk){ totCorrect++; levelCorrect[lv]++; }
+  if(wasErr&&!nowErr){ totWrong--;  levelWrong[lv]--;   }
+  if(!wasErr&&nowErr){ totWrong++;  levelWrong[lv]++;   }
+
+  updateFeedback(id);
+  updateMeta();
+  updateLevelUI();
+}
+
+// ── FEEDBACK ──────────────────────────────────────────────────────────
+function buildCard(id,k){
+  const h=HINTS[k];
+  const subs=states[id][k];
+  const nForms=subs.length;
+  const errLines=subs.map((s,si)=>{
+    if(s!=="err") return null;
+    const el=document.getElementById(`${id}-${k}-${si}`);
+    const v=el?el.value:"(vazio)";
+    return `campo ${si+1}: <em>"${v}"</em>`;
+  }).filter(Boolean).join(" · ");
+  const multiNote=nForms>1
+    ?`<div class="fb-opts">⚑ Este campo requer <strong>${nForms} formas</strong>.</div>`:"";
+  return `
+    <div class="fb-block">
+      <div class="fb-top">
+        <span class="fb-badge ${BADGE[k]}">${LABELS[k]}</span>
+        <span class="fb-typed">${errLines}</span>
+      </div>
+      <div class="fb-body">
+        ${multiNote}
+        <div class="fb-rt">Uso</div><div class="fb-usage">📌 ${h.usage}</div>
+        <div class="fb-rt">Fórmula</div><div class="fb-formula">${h.formula}</div>
+        <div class="fb-rt">Regra</div><div class="fb-desc">${h.desc}</div>
+        <div class="fb-rt" style="margin-top:5px">Exemplos</div>
+        <div class="fb-exs">${h.examples.map(e=>`<div class="fb-ex">${e.ex}</div>`).join("")}</div>
+      </div>
+    </div>`;
+}
+
+function updateFeedback(id){
+  const fbRow=document.getElementById(`fb-${id}`);
+  const fbGrid=document.getElementById(`fbg-${id}`);
+  const errKeys=KEYS.filter(k=>getCellState(id,k)==="err");
+  if(!errKeys.length){fbRow.classList.remove("on");return;}
+  fbRow.classList.add("on");
+  fbGrid.innerHTML=errKeys.map(k=>buildCard(id,k)).join("");
+}
+
+// ── META ──────────────────────────────────────────────────────────────
+function updateMeta(){
+  const cellMap=new Map();
+  document.querySelectorAll("#tbody input").forEach(inp=>{
+    const ck=`${inp.dataset.id}:${inp.dataset.key}`;
+    if(!cellMap.has(ck)) cellMap.set(ck,[]);
+    cellMap.get(ck).push(inp.value.trim());
+  });
+  const total=cellMap.size;
+  const filled=[...cellMap.values()].filter(vs=>vs.every(v=>v!=="")).length;
+  document.getElementById("sc").textContent=totCorrect;
+  document.getElementById("sw").textContent=totWrong;
+  document.getElementById("sp").textContent=total-filled;
+  document.getElementById("prog-lbl").textContent=`${filled} / ${total} células preenchidas`;
+  document.getElementById("prog-fill").style.width=total?(filled/total*100)+"%":"0%";
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────
+function toggleRules(){
+  const p=document.getElementById("rules-panel"),b=document.getElementById("rules-btn");
+  b.textContent=p.classList.toggle("open")?"✕ Fechar Regras":"📖 Ver Regras";
+}
+
+function checkAll(){
+  document.querySelectorAll("#tbody input").forEach(el=>{
+    if(el.value.trim()) checkCell(el);
+  });
+}
+
+function revealAll(){
+  if(!confirm("Isso vai mostrar as respostas do nível "+currentLevel+". Continuar?"))return;
+  document.querySelectorAll("#tbody input").forEach(el=>{
+    const lv = document.querySelector(`tr[data-id="${el.dataset.id}"]`).dataset.level;
+    el.value=el.dataset.ans.split(",")[0];
+    el.classList.remove("ok","err"); el.classList.add("ok");
+    const prev = states[el.dataset.id][el.dataset.key][parseInt(el.dataset.si)];
+    if(prev!=="ok"){ levelCorrect[lv]++; totCorrect++; }
+    states[el.dataset.id][el.dataset.key][parseInt(el.dataset.si)]="ok";
+  });
+  document.querySelectorAll(".fb-row").forEach(r=>r.classList.remove("on"));
+  updateMeta(); updateLevelUI();
+}
+
+function resetAll(){
+  if(!confirm("Resetar o nível "+currentLevel+"?"))return;
+  // Reset only current level's score
+  document.querySelectorAll("#tbody input").forEach(el=>{
+    el.value=""; el.className="";
+    states[el.dataset.id][el.dataset.key][parseInt(el.dataset.si)]="empty";
+  });
+  levelCorrect[currentLevel]=0; levelWrong[currentLevel]=0;
+  totCorrect=0; totWrong=0;
+  document.querySelectorAll(".fb-row").forEach(r=>r.classList.remove("on"));
+  updateMeta(); updateLevelUI();
+}
+
+render();
+updateLevelUI();
+</script>
+</body>
+</html>
