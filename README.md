@@ -21,13 +21,13 @@ Interactive verb conjugation exercise with gamification, sentence practice, and 
 npm install -g surge
 
 # 2. Deploy (choose your domain)
-surge . logoaliii-verbs.surge.sh
+surge . language-verbs.surge.sh
 
 # Or use the npm script (edit domain in package.json first)
 npm run deploy
 ```
 
-Your site will be live at: `https://logoaliii-verbs.surge.sh`
+Your site will be live at: `https://language-verbs.surge.sh`
 
 ---
 
