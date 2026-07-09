@@ -290,7 +290,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
 
 <div class="legend">
   <div class="leg"><div class="dot" style="background:var(--accent3)"></div><span id="leg-base">Base (given)</span></div>
-  <div class="leg"><div class="dot" style="background:var(--accent5)"></div><span id="leg-tr">Translation</span></div>
+  <div class="leg" id="leg-tr-item"><div class="dot" style="background:var(--accent5)"></div><span id="leg-tr">Translation</span></div>
   <div class="leg"><div class="dot" style="background:var(--cpres)"></div><span id="leg-pres">Present</span></div>
   <div class="leg"><div class="dot" style="background:var(--cpast)"></div><span id="leg-past">Past</span></div>
   <div class="leg"><div class="dot" style="background:var(--cfut)"></div><span id="leg-fut">Future</span></div>
@@ -517,6 +517,14 @@ function buildAnswers(base, past, pp, trRaw){
 
 // ── CONSTANTS ────────────────────────────────────────────────────────
 const KEYS = ["tr","ps","pc","pperf","ppc","past","pp","pastc","pastpc","pastperf","fs","fc","fp","fpc"];
+
+// The English interface drops the Portuguese-translation column entirely.
+function visibleKeys(){
+  return LANG==='en' ? KEYS.filter(k=>k!=='tr') : KEYS;
+}
+function totalCols(){
+  return visibleKeys().length + 2; // + "#" and "Base" columns
+}
 
 function LABELS(){
   return {
@@ -1078,7 +1086,7 @@ function togglePractice(id, btn){
   prRow = document.createElement('tr');
   prRow.className = 'practice-row open';
   prRow.id = 'pr-'+id;
-  prRow.innerHTML = `<td colspan="16">
+  prRow.innerHTML = `<td colspan="${totalCols()}">
     <div class="prac-header">
       <span class="prac-title">${t.pracTitle(base, level)}</span>
       <span class="prac-hint">${t.pracHint}</span>
@@ -1117,7 +1125,7 @@ function render(){
     tr.innerHTML=`
       <td class="td-n">${li+1}<button class="prac-btn" onclick="togglePractice('${id}',this)">${t.pracBtn}</button></td>
       <td class="td-base">${base}<span class="lvl-badge lb-${level}">${level}</span></td>
-      ${KEYS.map(k=>{
+      ${visibleKeys().map(k=>{
         const opts=ans[k].split(",").map(a=>a.trim()).filter(Boolean);
         const multi=opts.length>1;
         const showStatWarn = isStative && CONT_KEYS.has(k);
@@ -1139,7 +1147,7 @@ function render(){
 
     const fb=document.createElement("tr");
     fb.className="fb-row"; fb.id=`fb-${id}`;
-    fb.innerHTML=`<td colspan="16"><div class="fb-grid" id="fbg-${id}"></div></td>`;
+    fb.innerHTML=`<td colspan="${totalCols()}"><div class="fb-grid" id="fbg-${id}"></div></td>`;
     tbody.appendChild(fb);
   });
   updateMeta();
@@ -1241,7 +1249,7 @@ function updateMeta(){
 function renderRulesPanel(){
   const data = RULES_DATA[LANG];
   const grid = document.getElementById('rules-grid');
-  grid.innerHTML = KEYS.map(k=>{
+  grid.innerHTML = visibleKeys().map(k=>{
     const c = data[k];
     return `
     <div class="rcard">
@@ -1321,6 +1329,11 @@ function applyStaticI18N(){
   document.getElementById('gh-tr').textContent = t.ghTr;
   document.getElementById('th-base').innerHTML = `${t.th.base}<span class="th-sub" id="th-base-sub">${t.th.baseSub}</span>`;
   document.getElementById('th-tr').innerHTML = `${t.th.tr}<span class="th-sub" id="th-tr-sub">${t.th.trSub}</span>`;
+  // English interface drops the Portuguese-translation column entirely
+  const trHidden = LANG==='en';
+  document.getElementById('gh-tr').style.display = trHidden ? 'none' : '';
+  document.getElementById('th-tr').style.display = trHidden ? 'none' : '';
+  document.getElementById('leg-tr-item').style.display = trHidden ? 'none' : '';
   document.getElementById('th-ps').innerHTML = `Present Simple<span class="th-sub" id="th-ps-sub">${t.th.psSub}</span>`;
   document.getElementById('th-past').innerHTML = `Simple Past<span class="th-sub" id="th-past-sub">${t.th.pastSub}</span>`;
   document.getElementById('th-pp').innerHTML = `Past Participle<span class="th-sub" id="th-pp-sub">${t.th.ppSub}</span>`;
