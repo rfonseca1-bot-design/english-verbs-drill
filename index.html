@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,10 +22,14 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:2
 .hdr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 header h1{font-family:var(--hd);font-size:clamp(1rem,2.5vw,1.5rem);font-weight:800;letter-spacing:-.02em;color:var(--accent);}
 header p{color:var(--muted);font-size:.7rem;margin-top:3px;}
-.score-row{display:flex;gap:8px;flex-wrap:wrap;}
+.score-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .chip{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:.7rem;display:flex;gap:5px;align-items:center;}
 .chip span{color:var(--muted);}
 #sc{color:var(--correct);font-weight:700;}#sw{color:var(--wrong);font-weight:700;}#sp{color:var(--accent3);font-weight:700;}
+.lang-switch{display:flex;gap:3px;background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:3px;}
+.lang-btn{font-family:var(--hd);font-size:.63rem;font-weight:800;letter-spacing:.05em;padding:3px 10px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;}
+.lang-btn.active{background:var(--accent);color:#000;}
+.lang-btn:not(.active):hover{color:var(--accent);}
 .prog-wrap{margin-top:9px;}
 .prog-label{font-size:.63rem;color:var(--muted);margin-bottom:4px;}
 .prog-track{background:var(--border);border-radius:3px;height:3px;}
@@ -217,26 +221,30 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
   <div class="hdr-top">
     <div>
       <h1>⬡ English Verbs — Complete Tense Drill</h1>
-      <p>Preencha todos os tempos verbais: Presente, Passado e Futuro.</p>
+      <p id="hdr-sub">Fill in every tense: Present, Past and Future.</p>
     </div>
     <div class="score-row">
-      <div class="chip">✓ <span>Corretos:</span><span id="sc">0</span></div>
-      <div class="chip">✗ <span>Erros:</span><span id="sw">0</span></div>
-      <div class="chip">— <span>Pendentes:</span><span id="sp">0</span></div>
+      <div class="lang-switch" id="lang-switch">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+      </div>
+      <div class="chip">✓ <span id="lbl-correct">Correct:</span><span id="sc">0</span></div>
+      <div class="chip">✗ <span id="lbl-wrong">Wrong:</span><span id="sw">0</span></div>
+      <div class="chip">— <span id="lbl-pending">Pending:</span><span id="sp">0</span></div>
     </div>
   </div>
   <div class="prog-wrap">
-    <div class="prog-label" id="prog-lbl">0 / 0 preenchidos</div>
+    <div class="prog-label" id="prog-lbl">0 / 0 filled</div>
     <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
   </div>
 </header>
 
 <div class="action-bar">
-  <button class="btn btn-primary" onclick="checkAll()">✓ Verificar Tudo</button>
+  <button class="btn btn-primary" id="btn-check" onclick="checkAll()">✓ Check All</button>
   <div class="sep"></div>
-  <button class="btn btn-rules" onclick="toggleRules()" id="rules-btn">📖 Ver Regras</button>
-  <button class="btn btn-ghost" onclick="revealAll()">👁 Ver Respostas</button>
-  <button class="btn btn-red"   onclick="resetAll()">↺ Resetar</button>
+  <button class="btn btn-rules" onclick="toggleRules()" id="rules-btn">📖 View Rules</button>
+  <button class="btn btn-ghost" id="btn-reveal" onclick="revealAll()">👁 Reveal Answers</button>
+  <button class="btn btn-red"   id="btn-reset" onclick="resetAll()">↺ Reset</button>
 </div>
 
 <div class="level-bar" id="level-bar">
@@ -244,7 +252,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <div class="ltab-top">
       <span class="ltab-name">A2</span>
       <span class="ltab-desc">Beginner</span>
-      <span class="ltab-count" id="lc-A2">20 verbos</span>
+      <span class="ltab-count" id="lc-A2">20 verbs</span>
     </div>
     <div class="ltab-prog"><div class="ltab-fill" id="lf-A2"></div></div>
   </button>
@@ -252,7 +260,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <div class="ltab-top">
       <span class="ltab-name">B1</span>
       <span class="ltab-desc">Intermediate</span>
-      <span class="ltab-count" id="lc-B1">25 verbos</span>
+      <span class="ltab-count" id="lc-B1">25 verbs</span>
     </div>
     <div class="ltab-prog"><div class="ltab-fill" id="lf-B1"></div></div>
   </button>
@@ -260,7 +268,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <div class="ltab-top">
       <span class="ltab-name">B2</span>
       <span class="ltab-desc">Upper-Int</span>
-      <span class="ltab-count" id="lc-B2">30 verbos</span>
+      <span class="ltab-count" id="lc-B2">30 verbs</span>
     </div>
     <div class="ltab-prog"><div class="ltab-fill" id="lf-B2"></div></div>
   </button>
@@ -268,7 +276,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <div class="ltab-top">
       <span class="ltab-name">C1</span>
       <span class="ltab-desc">Advanced · IELTS</span>
-      <span class="ltab-count" id="lc-C1">39 verbos</span>
+      <span class="ltab-count" id="lc-C1">39 verbs</span>
     </div>
     <div class="ltab-prog"><div class="ltab-fill" id="lf-C1"></div></div>
   </button>
@@ -276,193 +284,18 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
 
 <!-- ══ RULES PANEL ══════════════════════════════════════════════════ -->
 <div class="rules-panel" id="rules-panel">
-  <div class="rules-title">📖 Regras de Preenchimento — Referência Completa</div>
-  <div class="rules-grid">
-
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-tr">Tradução (PT)</span></div>
-      <div class="rformula">qualquer equivalente correto em português</div>
-      <div class="rusage">📌 Acentos são opcionais. Sinônimos aceitos.</div>
-      <div class="rdesc">Escreva o significado principal. Múltiplas opções são aceitas.</div>
-      <div class="rexs">
-        <div class="rex"><b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em></div>
-        <div class="rex"><b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em></div>
-        <div class="rex"><b>run</b> → <em>correr</em> ou <em>executar</em></div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-ps">Present Simple (3ª pessoa)</span></div>
-      <div class="rformula">base + s / es / ies</div>
-      <div class="rusage">📌 Ações habituais, rotinas, verdades universais.</div>
-      <div class="rdesc">Padrão: <b>+s</b>. Termina em <b>-ch/-sh/-s/-x/-z</b>: <b>+es</b>. Consoante+y: <b>y → ies</b>. Irregulares: have→<em>has</em>, be→<em>is</em>, do→<em>does</em>.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)</div>
-        <div class="rex"><span class="qst">?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pc">Present Continuous</span></div>
-      <div class="rformula">is / am / are + verbo-ing</div>
-      <div class="rusage">📌 Ação em progresso AGORA, situação temporária, planos futuros confirmados, tendências em curso. <b>⚠ Stative verbs</b> não usam Continuous: know, want, love, believe, see, hear...</div>
-      <div class="rdesc">Regras do <b>-ing</b> (todos os Continuous):<br>
-      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
-      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
-      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
-      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
-      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
-      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)</div>
-        <div class="rex"><span class="qst">?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pperf">Present Perfect</span></div>
-      <div class="rformula">have / has + past participle</div>
-      <div class="rusage">📌 Experiência de vida (ever/never), ação que continua no presente (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido (yesterday, in 2020) → Simple Past.</div>
-      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp). Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)</div>
-        <div class="rex"><span class="qst">?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-ppc">Present Perf. Continuous</span></div>
-      <div class="rformula">have / has + been + verbo-ing</div>
-      <div class="rusage">📌 Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.</div>
-      <div class="rdesc">Diferença: <b>has worked</b> → foco no resultado (quantos). <b>has been working</b> → foco na duração (quanto tempo).<br>Regras do <b>-ing</b> (todos os Continuous):<br>
-      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
-      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
-      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
-      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
-      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
-      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)</div>
-        <div class="rex"><span class="qst">?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-past">Simple Past</span></div>
-      <div class="rformula">Regular: base + -ed  |  Irregular: forma própria</div>
-      <div class="rusage">📌 Ações concluídas em tempo definido no passado.</div>
-      <div class="rdesc">Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)</div>
-        <div class="rex"><span class="qst">?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pp">Past Participle</span></div>
-      <div class="rformula">Regular: = Simple Past  |  Irregular: pode diferir</div>
-      <div class="rusage">📌 Usado em todos os tempos Perfect (has/have/had/will have + pp).</div>
-      <div class="rdesc">Para verbos regulares, pp = simple past. Irregulares: pode ser igual ao past, igual à base, ou forma única.</div>
-      <div class="rexs">
-        <div class="rex"><b>work</b> → past: <em>worked</em> → pp: <em>worked</em> (regular: igual)</div>
-        <div class="rex"><b>go</b> → past: <em>went</em> → pp: <em>gone</em> (irregular: diferente)</div>
-        <div class="rex"><b>cut</b> → past: <em>cut</em> → pp: <em>cut</em> (irregular: igual à base)</div>
-        <div class="rex"><b>write</b> → past: <em>wrote</em> → pp: <em>written</em> (irregular)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pastc">Past Continuous</span></div>
-      <div class="rformula">was / were + verbo-ing</div>
-      <div class="rusage">📌 Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. <em>was</em> → I/he/she/it · <em>were</em> → you/we/they</div>
-      <div class="rdesc">Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)</div>
-        <div class="rex"><span class="qst">?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pastpc">Past Perf. Continuous</span></div>
-      <div class="rformula">had been + verbo-ing</div>
-      <div class="rusage">📌 Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.</div>
-      <div class="rdesc">Combina 'passado do passado' com aspecto contínuo. Sempre acompanhado de outro evento em Simple Past.<br>Regras do <b>-ing</b> (todos os Continuous):<br>
-      ① Padrão: <b>+ing</b> → work → <em>working</em><br>
-      ② Termina em <b>-e simples</b>: remove o e → make → <em>making</em><br>
-      ③ Termina em <b>-ee / -oe / -ye</b>: mantém o e → agree → <em>agreeing</em><br>
-      ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → <em>dying</em><br>
-      ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → <em>running</em><br>
-      ⑥ Polissilábico com acento na última sílaba CVC: dobra → be·GIN → <em>beginning</em></div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)</div>
-        <div class="rex"><span class="qst">?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-pastperf">Past Perfect</span></div>
-      <div class="rformula">had + past participle</div>
-      <div class="rusage">📌 'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina ordem cronológica.</div>
-      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp). Indica que algo ocorreu <em>antes</em> de outro evento passado.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)</div>
-        <div class="rex"><span class="qst">?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-fs">Future Simple</span></div>
-      <div class="rformula">will + verbo base (sem conjugar)</div>
-      <div class="rusage">📌 Previsões, decisões tomadas no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito ou evidência visível.</div>
-      <div class="rdesc">Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)</div>
-        <div class="rex"><span class="qst">?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-fc">Future Continuous</span></div>
-      <div class="rformula">will be + verbo-ing</div>
-      <div class="rusage">📌 Ação em andamento em momento específico do futuro.</div>
-      <div class="rdesc">Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)</div>
-        <div class="rex"><span class="qst">?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-fp">Future Perfect</span></div>
-      <div class="rformula">will have + past participle</div>
-      <div class="rusage">📌 Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.</div>
-      <div class="rdesc">Use o <b>Past Participle</b> (coluna pp).</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)</div>
-        <div class="rex"><span class="qst">?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)</div>
-      </div>
-    </div>
-    <div class="rcard">
-      <div class="rcard-head"><span class="rbadge b-fpc">Future Perf. Continuous</span></div>
-      <div class="rformula">will have been + verbo-ing</div>
-      <div class="rusage">📌 Duração de ação até momento futuro específico.</div>
-      <div class="rdesc">Combina Future Perfect + Continuous. Mesmas regras de formação do <b>-ing</b>.</div>
-      <div class="rexs">
-        <div class="rex"><b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)</div>
-        <div class="rex"><span class="neg">−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)</div>
-        <div class="rex"><span class="qst">?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)</div>
-      </div>
-    </div>
-  </div><!-- rules-grid -->
-</div><!-- rules-panel -->
+  <div class="rules-title" id="rules-title">📖 Filling Rules — Complete Reference</div>
+  <div class="rules-grid" id="rules-grid"></div>
+</div>
 
 <div class="legend">
-  <div class="leg"><div class="dot" style="background:var(--accent3)"></div>Base (dado)</div>
-  <div class="leg"><div class="dot" style="background:var(--accent5)"></div>Tradução</div>
-  <div class="leg"><div class="dot" style="background:var(--cpres)"></div>Presente</div>
-  <div class="leg"><div class="dot" style="background:var(--cpast)"></div>Passado</div>
-  <div class="leg"><div class="dot" style="background:var(--cfut)"></div>Futuro</div>
-  <div class="leg"><div class="dot" style="background:var(--correct)"></div>Correto</div>
-  <div class="leg"><div class="dot" style="background:var(--wrong)"></div>Erro</div>
+  <div class="leg"><div class="dot" style="background:var(--accent3)"></div><span id="leg-base">Base (given)</span></div>
+  <div class="leg"><div class="dot" style="background:var(--accent5)"></div><span id="leg-tr">Translation</span></div>
+  <div class="leg"><div class="dot" style="background:var(--cpres)"></div><span id="leg-pres">Present</span></div>
+  <div class="leg"><div class="dot" style="background:var(--cpast)"></div><span id="leg-past">Past</span></div>
+  <div class="leg"><div class="dot" style="background:var(--cfut)"></div><span id="leg-fut">Future</span></div>
+  <div class="leg"><div class="dot" style="background:var(--correct)"></div><span id="leg-correct">Correct</span></div>
+  <div class="leg"><div class="dot" style="background:var(--wrong)"></div><span id="leg-wrong">Wrong</span></div>
 </div>
 
 <div class="table-outer">
@@ -471,7 +304,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <!-- GROUP HEADER -->
     <tr class="gh">
       <th colspan="2"></th>
-      <th class="g-tr">Tradução</th>
+      <th class="g-tr" id="gh-tr">Translation</th>
       <th class="g-pres bdr-l" colspan="4">Present Tenses</th>
       <th class="g-past bdr-l" colspan="5">Past Tenses</th>
       <th class="g-fut bdr-l" colspan="4">Future Tenses</th>
@@ -479,14 +312,14 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
     <!-- COLUMN HEADER -->
     <tr class="ch">
       <th class="th-n">#</th>
-      <th style="color:var(--accent3)">Base<span class="th-sub">dado</span></th>
-      <th style="color:var(--accent5)">Tradução (PT)<span class="th-sub">preencher</span></th>
-      <th class="bdr-l" style="color:var(--cpres)">Present Simple<span class="th-sub">base+s/es/ies · 3ª pessoa</span></th>
+      <th style="color:var(--accent3)" id="th-base">Base<span class="th-sub" id="th-base-sub">given</span></th>
+      <th style="color:var(--accent5)" id="th-tr">Translation (PT)<span class="th-sub" id="th-tr-sub">fill in</span></th>
+      <th class="bdr-l" style="color:var(--cpres)" id="th-ps">Present Simple<span class="th-sub" id="th-ps-sub">base+s/es/ies · 3rd person</span></th>
       <th style="color:var(--cpres)">Present Continuous<span class="th-sub">is + -ing</span></th>
       <th style="color:var(--cpres)">Present Perfect<span class="th-sub">has + p.p.</span></th>
       <th style="color:var(--cpres)">Present Perf. Cont.<span class="th-sub">has been + -ing</span></th>
-      <th class="bdr-l" style="color:var(--cpast)">Simple Past<span class="th-sub">preencher</span></th>
-      <th style="color:var(--cpast)">Past Participle<span class="th-sub">preencher</span></th>
+      <th class="bdr-l" style="color:var(--cpast)" id="th-past">Simple Past<span class="th-sub" id="th-past-sub">fill in</span></th>
+      <th style="color:var(--cpast)" id="th-pp">Past Participle<span class="th-sub" id="th-pp-sub">fill in</span></th>
       <th style="color:var(--cpast)">Past Continuous<span class="th-sub">was/were + -ing</span></th>
       <th style="color:var(--cpast)">Past Perf. Cont.<span class="th-sub">had been + -ing</span></th>
       <th style="color:var(--cpast)">Past Perfect<span class="th-sub">had + p.p.</span></th>
@@ -502,7 +335,7 @@ tr.fb-row td{background:rgba(239,35,60,.03);border-bottom:2px solid rgba(239,35,
 
 <script>
 // ── VERB DATA ────────────────────────────────────────────────────────
-// [base, simple_past, past_participle, type, translations_pt (comma-sep)]
+// [base, simple_past, past_participle, type, translations_pt (comma-sep), level, isStative?]
 const VERBS = [
   ["be","was,were","been","irregular","ser,estar,ficar,existir","A2"],
   ["have","had","had","irregular","ter,possuir,haver","A2"],
@@ -685,13 +518,16 @@ function buildAnswers(base, past, pp, trRaw){
 // ── CONSTANTS ────────────────────────────────────────────────────────
 const KEYS = ["tr","ps","pc","pperf","ppc","past","pp","pastc","pastpc","pastperf","fs","fc","fp","fpc"];
 
-const LABELS = {
-  tr:"Tradução (PT)", ps:"Present Simple", pc:"Present Continuous",
-  pperf:"Present Perfect", past:"Simple Past", pp:"Past Participle",
-  pastc:"Past Continuous", pastperf:"Past Perfect",
-  ppc:"Present Perf. Continuous", pastpc:"Past Perf. Continuous",
-  fs:"Future Simple", fc:"Future Continuous", fp:"Future Perfect", fpc:"Future Perf. Continuous"
-};
+function LABELS(){
+  return {
+    tr: LANG==='en' ? "Translation (PT)" : "Tradução (PT)",
+    ps:"Present Simple", pc:"Present Continuous",
+    pperf:"Present Perfect", past:"Simple Past", pp:"Past Participle",
+    pastc:"Past Continuous", pastperf:"Past Perfect",
+    ppc:"Present Perf. Continuous", pastpc:"Past Perf. Continuous",
+    fs:"Future Simple", fc:"Future Continuous", fp:"Future Perfect", fpc:"Future Perf. Continuous"
+  };
+}
 
 const BADGE = {
   tr:"b-tr", ps:"b-ps", pc:"b-pc", pperf:"b-pperf",
@@ -707,157 +543,381 @@ const GROUP = {
   fs:"g-fut", fc:"g-fut", fp:"g-fut", fpc:"g-fut"
 };
 
-// shared -ing rules text
-const ING_RULES = `Regras do <b>-ing</b>:<br>
-① Padrão: <b>+ing</b><br>
+// shared -ing rule enumerations (reused across several tenses/languages)
+const ING_ENUM_PT = `① Padrão: <b>+ing</b><br>
 ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br>
 ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br>
-④ Termina em <b>-ie</b>: troca -ie por <b>-ying</b> → die → dy<b>ing</b><br>
+④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br>
 ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br>
 ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing`;
 
+const ING_ENUM_EN = `① Standard: <b>+ing</b><br>
+② Ends in a <b>silent -e</b>: drop the e → make → mak<b>ing</b><br>
+③ Ends in <b>-ee/-oe/-ye</b>: keep the e → agree → agree<b>ing</b><br>
+④ Ends in <b>-ie</b>: change -ie to <b>-ying</b> → die → dy<b>ing</b><br>
+⑤ Monosyllabic <b>CVC</b> (no w/x/y): double → run → runn<b>ing</b><br>
+⑥ Polysyllabic, stress on final CVC: double → be·GIN → beg<b>inn</b>ing`;
+
+// ── FEEDBACK-CARD HINTS (shown under a wrong cell) ──────────────────
 const HINTS = {
-  tr:{
-    formula:"qualquer equivalente correto em português",
-    usage:"Acentos opcionais. Sinônimos aceitos.",
-    desc:"Escreva o significado principal. Múltiplas opções são aceitas.",
-    examples:[
-      {ex:"<b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em>"},
-      {ex:"<b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em>"},
-      {ex:"<b>run</b> → <em>correr</em> ou <em>executar</em>"}
-    ]
+  pt: {
+    tr:{ formula:"qualquer equivalente correto em português", usage:"Acentos opcionais. Sinônimos aceitos.", desc:"Escreva o significado principal. Múltiplas opções são aceitas.",
+      examples:[
+        {ex:"<b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em>"},
+        {ex:"<b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em>"},
+        {ex:"<b>run</b> → <em>correr</em> ou <em>executar</em>"}
+      ]},
+    ps:{ formula:"base + s / es / ies (3ª pessoa he/she/it)", usage:"Ações habituais, rotinas e verdades universais.",
+      desc:"Padrão: <b>+s</b>. Termina em -ch/-sh/-s/-x/-z: <b>+es</b>. Consoante+y: <b>-ies</b>. Irregulares: have→has, be→is, do→does.",
+      examples:[
+        {ex:"<b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)"},
+        {ex:"<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)"},
+        {ex:"<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)"}
+      ]},
+    pc:{ formula:"is / am / are + verbo-ing", usage:"Ação em progresso AGORA, situação temporária, planos futuros confirmados. ⚠ Stative verbs não usam Continuous: know, want, love, believe, see, hear...",
+      desc:`Regras do <b>-ing</b>:<br>${ING_ENUM_PT}`,
+      examples:[
+        {ex:"<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)"},
+        {ex:"<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)"},
+        {ex:"<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)"}
+      ]},
+    pperf:{ formula:"have / has + past participle", usage:"Experiência de vida (ever/never), ação que continua (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido → Simple Past.",
+      desc:"Use o <b>Past Participle</b>. Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.",
+      examples:[
+        {ex:"<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)"},
+        {ex:"<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)"},
+        {ex:"<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)"}
+      ]},
+    ppc:{ formula:"have / has + been + verbo-ing", usage:"Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.",
+      desc:"Diferença: <b>has worked</b> → resultado (quantos). <b>has been working</b> → duração (quanto tempo).",
+      examples:[
+        {ex:"<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)"},
+        {ex:"<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)"},
+        {ex:"<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)"}
+      ]},
+    past:{ formula:"Regular: base + -ed  |  Irregular: forma própria", usage:"Ações concluídas em tempo definido no passado.",
+      desc:"Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.",
+      examples:[
+        {ex:"<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)"},
+        {ex:"<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)"},
+        {ex:"<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)"}
+      ]},
+    pp:{ formula:"Regular: = Simple Past  |  Irregular: pode diferir", usage:"Usado em todos os tempos Perfect (has/have/had/will have + pp).",
+      desc:"Regular: pp = simple past. Irregulares: pode ser igual ao past, à base, ou forma única.",
+      examples:[
+        {ex:"<b>work</b> → past: worked → pp: <em>worked</em> (regular)"},
+        {ex:"<b>go</b> → past: went → pp: <em>gone</em> (irregular)"},
+        {ex:"<b>write</b> → past: wrote → pp: <em>written</em> (irregular)"}
+      ]},
+    pastc:{ formula:"was / were + verbo-ing", usage:"Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. was → I/he/she/it · were → you/we/they.",
+      desc:`Regras do <b>-ing</b>:<br>${ING_ENUM_PT}`,
+      examples:[
+        {ex:"<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)"},
+        {ex:"<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)"},
+        {ex:"<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)"}
+      ]},
+    pastpc:{ formula:"had been + verbo-ing", usage:"Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.",
+      desc:"Combina 'passado do passado' com aspecto contínuo. Acompanhado de outro evento em Simple Past.",
+      examples:[
+        {ex:"<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)"},
+        {ex:"<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)"},
+        {ex:"<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)"}
+      ]},
+    pastperf:{ formula:"had + past participle", usage:"'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina a ordem cronológica.",
+      desc:"Use o <b>Past Participle</b>. Indica que algo ocorreu antes de outro evento passado.",
+      examples:[
+        {ex:"<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)"},
+        {ex:"<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)"},
+        {ex:"<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)"}
+      ]},
+    fs:{ formula:"will + verbo base (sem conjugar)", usage:"Previsões, decisões no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito.",
+      desc:"Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.",
+      examples:[
+        {ex:"<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)"},
+        {ex:"<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)"},
+        {ex:"<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)"}
+      ]},
+    fc:{ formula:"will be + verbo-ing", usage:"Ação em andamento em momento específico do futuro.",
+      desc:`Regras do <b>-ing</b>:<br>${ING_ENUM_PT}`,
+      examples:[
+        {ex:"<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)"},
+        {ex:"<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)"},
+        {ex:"<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)"}
+      ]},
+    fp:{ formula:"will have + past participle", usage:"Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.",
+      desc:"Use o <b>Past Participle</b> (coluna pp).",
+      examples:[
+        {ex:"<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)"},
+        {ex:"<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)"},
+        {ex:"<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)"}
+      ]},
+    fpc:{ formula:"will have been + verbo-ing", usage:"Duração de ação até momento futuro específico.",
+      desc:"Combina Future Perfect + Continuous. Mesmas regras de formação do -ing.",
+      examples:[
+        {ex:"<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)"},
+        {ex:"<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)"},
+        {ex:"<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)"}
+      ]}
   },
-  ps:{
-    formula:"base + s / es / ies (3ª pessoa he/she/it)",
-    usage:"Ações habituais, rotinas e verdades universais.",
-    desc:"Padrão: <b>+s</b>. Termina em -ch/-sh/-s/-x/-z: <b>+es</b>. Consoante+y: <b>-ies</b>. Irregulares: have→has, be→is, do→does.",
-    examples:[
-      {ex:"<b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)"},
-      {ex:"<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)"},
-      {ex:"<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)"}
-    ]
-  },
-  pc:{
-    formula:"is / am / are + verbo-ing",
-    usage:"Ação em progresso AGORA, situação temporária, planos futuros confirmados. ⚠ Stative verbs não usam Continuous: know, want, love, believe, see, hear...",
-    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
-    examples:[
-      {ex:"<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)"},
-      {ex:"<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)"},
-      {ex:"<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)"}
-    ]
-  },
-  pperf:{
-    formula:"have / has + past participle",
-    usage:"Experiência de vida (ever/never), ação que continua (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido → Simple Past.",
-    desc:"Use o <b>Past Participle</b>. Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.",
-    examples:[
-      {ex:"<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)"},
-      {ex:"<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)"},
-      {ex:"<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)"}
-    ]
-  },
-  ppc:{
-    formula:"have / has + been + verbo-ing",
-    usage:"Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.",
-    desc:"Diferença: <b>has worked</b> → resultado (quantos). <b>has been working</b> → duração (quanto tempo).",
-    examples:[
-      {ex:"<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)"},
-      {ex:"<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)"},
-      {ex:"<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)"}
-    ]
-  },
-  past:{
-    formula:"Regular: base + -ed  |  Irregular: forma própria",
-    usage:"Ações concluídas em tempo definido no passado.",
-    desc:"Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.",
-    examples:[
-      {ex:"<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)"},
-      {ex:"<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)"},
-      {ex:"<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)"}
-    ]
-  },
-  pp:{
-    formula:"Regular: = Simple Past  |  Irregular: pode diferir",
-    usage:"Usado em todos os tempos Perfect (has/have/had/will have + pp).",
-    desc:"Regular: pp = simple past. Irregulares: pode ser igual ao past, à base, ou forma única.",
-    examples:[
-      {ex:"<b>work</b> → past: worked → pp: <em>worked</em> (regular)"},
-      {ex:"<b>go</b> → past: went → pp: <em>gone</em> (irregular)"},
-      {ex:"<b>write</b> → past: wrote → pp: <em>written</em> (irregular)"}
-    ]
-  },
-  pastc:{
-    formula:"was / were + verbo-ing",
-    usage:"Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. was → I/he/she/it · were → you/we/they.",
-    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
-    examples:[
-      {ex:"<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)"},
-      {ex:"<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)"},
-      {ex:"<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)"}
-    ]
-  },
-  pastpc:{
-    formula:"had been + verbo-ing",
-    usage:"Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.",
-    desc:"Combina 'passado do passado' com aspecto contínuo. Acompanhado de outro evento em Simple Past.",
-    examples:[
-      {ex:"<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)"},
-      {ex:"<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)"},
-      {ex:"<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)"}
-    ]
-  },
-  pastperf:{
-    formula:"had + past participle",
-    usage:"'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina a ordem cronológica.",
-    desc:"Use o <b>Past Participle</b>. Indica que algo ocorreu antes de outro evento passado.",
-    examples:[
-      {ex:"<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)"},
-      {ex:"<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)"},
-      {ex:"<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)"}
-    ]
-  },
-  fs:{
-    formula:"will + verbo base (sem conjugar)",
-    usage:"Previsões, decisões no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito.",
-    desc:"Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.",
-    examples:[
-      {ex:"<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)"},
-      {ex:"<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)"},
-      {ex:"<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)"}
-    ]
-  },
-  fc:{
-    formula:"will be + verbo-ing",
-    usage:"Ação em andamento em momento específico do futuro.",
-    desc:"Regras do <b>-ing</b>:<br> ① Padrão: <b>+ing</b><br> ② Termina em <b>-e simples</b>: remove o e → make → mak<b>ing</b><br> ③ Termina em <b>-ee/-oe/-ye</b>: mantém o e → agree → agree<b>ing</b><br> ④ Termina em <b>-ie</b>: troca por <b>-ying</b> → die → dy<b>ing</b><br> ⑤ Monossilábico <b>CVC</b> (sem w/x/y): dobra → run → runn<b>ing</b><br> ⑥ Polissilábico acento final CVC: dobra → be·GIN → beg<b>inn</b>ing",
-    examples:[
-      {ex:"<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)"},
-      {ex:"<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)"},
-      {ex:"<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)"}
-    ]
-  },
-  fp:{
-    formula:"will have + past participle",
-    usage:"Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.",
-    desc:"Use o <b>Past Participle</b> (coluna pp).",
-    examples:[
-      {ex:"<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)"},
-      {ex:"<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)"},
-      {ex:"<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)"}
-    ]
-  },
-  fpc:{
-    formula:"will have been + verbo-ing",
-    usage:"Duração de ação até momento futuro específico.",
-    desc:"Combina Future Perfect + Continuous. Mesmas regras de formação do -ing.",
-    examples:[
-      {ex:"<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)"},
-      {ex:"<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)"},
-      {ex:"<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)"}
-    ]
+  en: {
+    tr:{ formula:"any correct Portuguese equivalent", usage:"Accents optional. Synonyms accepted.", desc:"Write the main meaning in Portuguese. Multiple options are accepted.",
+      examples:[
+        {ex:"<b>make</b> → <em>fazer</em>, <em>criar</em> or <em>produzir</em>"},
+        {ex:"<b>get</b> → <em>obter</em>, <em>conseguir</em> or <em>pegar</em>"},
+        {ex:"<b>run</b> → <em>correr</em> or <em>executar</em>"}
+      ]},
+    ps:{ formula:"base + s / es / ies (3rd person he/she/it)", usage:"Habitual actions, routines, and universal truths.",
+      desc:"Standard: <b>+s</b>. Ends in -ch/-sh/-s/-x/-z: <b>+es</b>. Consonant+y: <b>-ies</b>. Irregulars: have→has, be→is, do→does.",
+      examples:[
+        {ex:"<b>+</b> Subject + verb(+s/es): <em>She works every day.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em>"},
+        {ex:"<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em>"}
+      ]},
+    pc:{ formula:"is / am / are + verb-ing", usage:"Action in progress RIGHT NOW, temporary situation, confirmed future plans. ⚠ Stative verbs don't use Continuous: know, want, love, believe, see, hear...",
+      desc:`<b>-ing</b> rules:<br>${ING_ENUM_EN}`,
+      examples:[
+        {ex:"<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em>"},
+        {ex:"<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em>"}
+      ]},
+    pperf:{ formula:"have / has + past participle", usage:"Life experience (ever/never), action continuing into the present (since/for), visible result (just/already/yet). ⚠ With a definite time (yesterday, in 2020) → Simple Past.",
+      desc:"Use the <b>Past Participle</b>. Markers: <em>since, for, just, already, yet, ever, never, recently</em>.",
+      examples:[
+        {ex:"<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em>"},
+        {ex:"<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em>"}
+      ]},
+    ppc:{ formula:"have / has + been + verb-ing", usage:"Action started in the past, still ongoing NOW, with emphasis on DURATION. Markers: since, for, all morning, all day.",
+      desc:"Difference: <b>has worked</b> → focus on result (how many). <b>has been working</b> → focus on duration (how long).",
+      examples:[
+        {ex:"<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em>"},
+        {ex:"<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em>"}
+      ]},
+    past:{ formula:"Regular: base + -ed  |  Irregular: own form", usage:"Actions completed at a definite time in the past.",
+      desc:"Regular: <b>+ed</b>. Ends in -e: <b>+d</b>. Consonant+y: <b>-ied</b>. Monosyllabic CVC: double before +ed. Irregulars: memorize.",
+      examples:[
+        {ex:"<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em>"},
+        {ex:"<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em>"}
+      ]},
+    pp:{ formula:"Regular: = Simple Past  |  Irregular: may differ", usage:"Used in all Perfect tenses (has/have/had/will have + pp).",
+      desc:"For regular verbs, pp = simple past. Irregulars: may equal the past, the base, or have a unique form.",
+      examples:[
+        {ex:"<b>work</b> → past: worked → pp: <em>worked</em> (regular)"},
+        {ex:"<b>go</b> → past: went → pp: <em>gone</em> (irregular)"},
+        {ex:"<b>write</b> → past: wrote → pp: <em>written</em> (irregular)"}
+      ]},
+    pastc:{ formula:"was / were + verb-ing", usage:"Action in progress in the past, usually interrupted by a specific action. Narrative background. was → I/he/she/it · were → you/we/they.",
+      desc:`<b>-ing</b> rules:<br>${ING_ENUM_EN}`,
+      examples:[
+        {ex:"<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em>"},
+        {ex:"<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em>"}
+      ]},
+    pastpc:{ formula:"had been + verb-ing", usage:"Prolonged action in the past, prior to another past event. Emphasis on duration.",
+      desc:"Combines the 'past of the past' with continuous aspect. Accompanied by another event in Simple Past.",
+      examples:[
+        {ex:"<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em>"},
+        {ex:"<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em>"}
+      ]},
+    pastperf:{ formula:"had + past participle", usage:"'Past of the past' — action completed BEFORE another action in Simple Past. Establishes chronological order.",
+      desc:"Use the <b>Past Participle</b>. Indicates something happened before another past event.",
+      examples:[
+        {ex:"<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em>"},
+        {ex:"<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em>"}
+      ]},
+    fs:{ formula:"will + base verb (unconjugated)", usage:"Predictions, decisions made at the moment of speaking, promises, spontaneous offers. ⚠ will = immediate decision; going to = pre-made plan.",
+      desc:"Always the base form of the verb after <b>will</b>. Don't add -s or -ed. Applies to all subjects.",
+      examples:[
+        {ex:"<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em>"},
+        {ex:"<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em>"}
+      ]},
+    fc:{ formula:"will be + verb-ing", usage:"Action in progress at a specific point in the future.",
+      desc:`<b>-ing</b> rules:<br>${ING_ENUM_EN}`,
+      examples:[
+        {ex:"<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em>"},
+        {ex:"<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em>"}
+      ]},
+    fp:{ formula:"will have + past participle", usage:"Action that will be completed BEFORE a future milestone. Markers: by tomorrow, by 2030, by the time + clause.",
+      desc:"Use the <b>Past Participle</b> (pp column).",
+      examples:[
+        {ex:"<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em>"},
+        {ex:"<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em>"}
+      ]},
+    fpc:{ formula:"will have been + verb-ing", usage:"Duration of an action up to a specific future point.",
+      desc:"Combines Future Perfect + Continuous. Same -ing formation rules.",
+      examples:[
+        {ex:"<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em>"},
+        {ex:"<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em>"},
+        {ex:"<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em>"}
+      ]}
   }
 };
+
+// ── RULES-PANEL DATA (the "View Rules" reference cards) ─────────────
+const RULES_DATA = {
+  pt: {
+    tr:{ badge:"Tradução (PT)", formula:"qualquer equivalente correto em português", usage:"📌 Acentos são opcionais. Sinônimos aceitos.", desc:"Escreva o significado principal. Múltiplas opções são aceitas.",
+      examples:["<b>make</b> → <em>fazer</em>, <em>criar</em> ou <em>produzir</em>","<b>get</b> → <em>obter</em>, <em>conseguir</em> ou <em>pegar</em>","<b>run</b> → <em>correr</em> ou <em>executar</em>"]},
+    ps:{ badge:"Present Simple (3ª pessoa)", formula:"base + s / es / ies", usage:"📌 Ações habituais, rotinas, verdades universais.",
+      desc:"Padrão: <b>+s</b>. Termina em <b>-ch/-sh/-s/-x/-z</b>: <b>+es</b>. Consoante+y: <b>y → ies</b>. Irregulares: have→<em>has</em>, be→<em>is</em>, do→<em>does</em>.",
+      examples:["<b>+</b> Subject + verb(+s/es): <em>She works every day.</em> (Ela trabalha todos os dias.)","<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em> (Ela não trabalha nos fins de semana.)","<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em> (Ela trabalha aqui?)"]},
+    pc:{ badge:"Present Continuous", formula:"is / am / are + verbo-ing", usage:"📌 Ação em progresso AGORA, situação temporária, planos futuros confirmados, tendências em curso. <b>⚠ Stative verbs</b> não usam Continuous: know, want, love, believe, see, hear...",
+      desc:`Regras do <b>-ing</b> (todos os Continuous):<br>${ING_ENUM_PT}`,
+      examples:["<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em> (Ela está estudando agora.)","<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em> (Ela não está comendo agora.)","<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em> (Ela está trabalhando no projeto?)"]},
+    pperf:{ badge:"Present Perfect", formula:"have / has + past participle", usage:"📌 Experiência de vida (ever/never), ação que continua no presente (since/for), resultado visível (just/already/yet). ⚠ Com tempo definido (yesterday, in 2020) → Simple Past.",
+      desc:"Use o <b>Past Participle</b> (coluna pp). Marcadores: <em>since, for, just, already, yet, ever, never, recently</em>.",
+      examples:["<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em> (Ela terminou o relatório.)","<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em> (Ela ainda não viu aquele filme.)","<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em> (Ela já visitou o Japão?)"]},
+    ppc:{ badge:"Present Perf. Continuous", formula:"have / has + been + verbo-ing", usage:"📌 Ação iniciada no passado, ainda em curso AGORA, com ênfase na DURAÇÃO. Marcadores: since, for, all morning, all day.",
+      desc:`Diferença: <b>has worked</b> → foco no resultado (quantos). <b>has been working</b> → foco na duração (quanto tempo).<br>Regras do <b>-ing</b> (todos os Continuous):<br>${ING_ENUM_PT}`,
+      examples:["<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em> (Ela tem trabalhado a manhã toda.)","<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em> (Ela não tem dormido bem.)","<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em> (Ela está esperando há muito tempo?)"]},
+    past:{ badge:"Simple Past", formula:"Regular: base + -ed  |  Irregular: forma própria", usage:"📌 Ações concluídas em tempo definido no passado.",
+      desc:"Regular: <b>+ed</b>. Termina em -e: <b>+d</b>. Consoante+y: <b>-ied</b>. Monossilábico CVC: dobra antes de +ed. Irregulares: memorização.",
+      examples:["<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em> (Ela visitou Paris no ano passado.)","<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em> (Ela não foi à festa.)","<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em> (Ela terminou o projeto?)"]},
+    pp:{ badge:"Past Participle", formula:"Regular: = Simple Past  |  Irregular: pode diferir", usage:"📌 Usado em todos os tempos Perfect (has/have/had/will have + pp).",
+      desc:"Para verbos regulares, pp = simple past. Irregulares: pode ser igual ao past, igual à base, ou forma única.",
+      examples:["<b>work</b> → past: <em>worked</em> → pp: <em>worked</em> (regular: igual)","<b>go</b> → past: <em>went</em> → pp: <em>gone</em> (irregular: diferente)","<b>cut</b> → past: <em>cut</em> → pp: <em>cut</em> (irregular: igual à base)","<b>write</b> → past: <em>wrote</em> → pp: <em>written</em> (irregular)"]},
+    pastc:{ badge:"Past Continuous", formula:"was / were + verbo-ing", usage:"📌 Ação em progresso no passado, geralmente interrompida por ação pontual. Background de narrativa. <em>was</em> → I/he/she/it · <em>were</em> → you/we/they",
+      desc:"Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).",
+      examples:["<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em> (Ela estava cozinhando quando você ligou.)","<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em> (Ela não estava dormindo à meia-noite.)","<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em> (Ela estava trabalhando quando aconteceu?)"]},
+    pastpc:{ badge:"Past Perf. Continuous", formula:"had been + verbo-ing", usage:"📌 Ação prolongada no passado, anterior a outro evento passado. Ênfase na duração.",
+      desc:`Combina 'passado do passado' com aspecto contínuo. Sempre acompanhado de outro evento em Simple Past.<br>Regras do <b>-ing</b> (todos os Continuous):<br>${ING_ENUM_PT}`,
+      examples:["<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em> (Ela estava esperando há uma hora quando o ônibus chegou.)","<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em> (Ele não estava dormindo bem antes da prova.)","<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em> (Ela tinha estudado a noite toda?)"]},
+    pastperf:{ badge:"Past Perfect", formula:"had + past participle", usage:"📌 'Passado do passado' — ação concluída ANTES de outra ação em Simple Past. Determina ordem cronológica.",
+      desc:"Use o <b>Past Participle</b> (coluna pp). Indica que algo ocorreu <em>antes</em> de outro evento passado.",
+      examples:["<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em> (Ela tinha terminado a lição antes do jantar.)","<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em> (Ele não tinha ido para casa até Peter voltar.)","<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em> (Você já tinha visitado a Argentina antes da viagem?)"]},
+    fs:{ badge:"Future Simple", formula:"will + verbo base (sem conjugar)", usage:"📌 Previsões, decisões tomadas no momento da fala, promessas, ofertas espontâneas. ⚠ will = decisão imediata; going to = plano feito ou evidência visível.",
+      desc:"Sempre o verbo na forma base após <b>will</b>. Não adicione -s ou -ed. Vale para todos os sujeitos.",
+      examples:["<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em> (Ela vai viajar para o Brasil no próximo ano.)","<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em> (Ela não vai se atrasar para a reunião.)","<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em> (Ela vai vir à festa?)"]},
+    fc:{ badge:"Future Continuous", formula:"will be + verbo-ing", usage:"📌 Ação em andamento em momento específico do futuro.",
+      desc:"Mesmas regras de formação do <b>-ing</b> (veja Present Continuous).",
+      examples:["<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em> (Ela estará estudando às 20h.)","<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em> (Ela não estará trabalhando amanhã.)","<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em> (Ela estará esperando quando chegarmos?)"]},
+    fp:{ badge:"Future Perfect", formula:"will have + past participle", usage:"📌 Ação que estará concluída ANTES de marco futuro. Marcadores: by tomorrow, by 2030, by the time + clause.",
+      desc:"Use o <b>Past Participle</b> (coluna pp).",
+      examples:["<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em> (Ela terá terminado antes do meio-dia.)","<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em> (Ela não terá chegado até lá.)","<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em> (Ela terá saído antes de chegarmos?)"]},
+    fpc:{ badge:"Future Perf. Continuous", formula:"will have been + verbo-ing", usage:"📌 Duração de ação até momento futuro específico.",
+      desc:"Combina Future Perfect + Continuous. Mesmas regras de formação do <b>-ing</b>.",
+      examples:["<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em> (Às 17h, ela terá trabalhado por 8 horas.)","<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em> (Ela não terá esperado muito.)","<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em> (Ela terá estudado por 3 horas?)"]}
+  },
+  en: {
+    tr:{ badge:"Translation (PT)", formula:"any correct equivalent in Portuguese", usage:"📌 Accents are optional. Synonyms accepted.", desc:"Write the main meaning. Multiple options are accepted.",
+      examples:["<b>make</b> → <em>fazer</em>, <em>criar</em> or <em>produzir</em>","<b>get</b> → <em>obter</em>, <em>conseguir</em> or <em>pegar</em>","<b>run</b> → <em>correr</em> or <em>executar</em>"]},
+    ps:{ badge:"Present Simple (3rd person)", formula:"base + s / es / ies", usage:"📌 Habitual actions, routines, universal truths.",
+      desc:"Standard: <b>+s</b>. Ends in <b>-ch/-sh/-s/-x/-z</b>: <b>+es</b>. Consonant+y: <b>y → ies</b>. Irregulars: have→<em>has</em>, be→<em>is</em>, do→<em>does</em>.",
+      examples:["<b>+</b> Subject + verb(+s/es): <em>She works every day.</em>","<span class='neg'>−</span> Subject + doesn't + verb: <em>She doesn't work on weekends.</em>","<span class='qst'>?</span> Does + subject + verb?: <em>Does she work here?</em>"]},
+    pc:{ badge:"Present Continuous", formula:"is / am / are + verb-ing", usage:"📌 Action in progress RIGHT NOW, temporary situation, confirmed future plans, ongoing trends. <b>⚠ Stative verbs</b> don't use Continuous: know, want, love, believe, see, hear...",
+      desc:`<b>-ing</b> rules (all Continuous tenses):<br>${ING_ENUM_EN}`,
+      examples:["<b>+</b> Subject + is/am/are + -ing: <em>She is studying right now.</em>","<span class='neg'>−</span> Subject + isn't/aren't + -ing: <em>She isn't eating at the moment.</em>","<span class='qst'>?</span> Is/Am/Are + subject + -ing?: <em>Is she working on the project?</em>"]},
+    pperf:{ badge:"Present Perfect", formula:"have / has + past participle", usage:"📌 Life experience (ever/never), action continuing into the present (since/for), visible result (just/already/yet). ⚠ With a definite time (yesterday, in 2020) → Simple Past.",
+      desc:"Use the <b>Past Participle</b> (pp column). Markers: <em>since, for, just, already, yet, ever, never, recently</em>.",
+      examples:["<b>+</b> Subject + has/have + pp: <em>She has finished the report.</em>","<span class='neg'>−</span> Subject + hasn't/haven't + pp: <em>She hasn't seen that film yet.</em>","<span class='qst'>?</span> Has/Have + subject + pp?: <em>Has she ever visited Japan?</em>"]},
+    ppc:{ badge:"Present Perf. Continuous", formula:"have / has + been + verb-ing", usage:"📌 Action started in the past, still ongoing NOW, with emphasis on DURATION. Markers: since, for, all morning, all day.",
+      desc:`Difference: <b>has worked</b> → focus on result (how many). <b>has been working</b> → focus on duration (how long).<br><b>-ing</b> rules (all Continuous tenses):<br>${ING_ENUM_EN}`,
+      examples:["<b>+</b> Subject + has been + -ing: <em>She has been working all morning.</em>","<span class='neg'>−</span> Subject + hasn't been + -ing: <em>She hasn't been sleeping well lately.</em>","<span class='qst'>?</span> Has + subject + been + -ing?: <em>Has she been waiting long?</em>"]},
+    past:{ badge:"Simple Past", formula:"Regular: base + -ed  |  Irregular: own form", usage:"📌 Actions completed at a definite time in the past.",
+      desc:"Regular: <b>+ed</b>. Ends in -e: <b>+d</b>. Consonant+y: <b>-ied</b>. Monosyllabic CVC: double before +ed. Irregulars: memorize.",
+      examples:["<b>+</b> Subject + verb(past): <em>She visited Paris last year.</em>","<span class='neg'>−</span> Subject + didn't + verb: <em>She didn't go to the party.</em>","<span class='qst'>?</span> Did + subject + verb?: <em>Did she finish the project?</em>"]},
+    pp:{ badge:"Past Participle", formula:"Regular: = Simple Past  |  Irregular: may differ", usage:"📌 Used in all Perfect tenses (has/have/had/will have + pp).",
+      desc:"For regular verbs, pp = simple past. Irregulars: may equal the past, the base, or have a unique form.",
+      examples:["<b>work</b> → past: <em>worked</em> → pp: <em>worked</em> (regular: same)","<b>go</b> → past: <em>went</em> → pp: <em>gone</em> (irregular: different)","<b>cut</b> → past: <em>cut</em> → pp: <em>cut</em> (irregular: same as base)","<b>write</b> → past: <em>wrote</em> → pp: <em>written</em> (irregular)"]},
+    pastc:{ badge:"Past Continuous", formula:"was / were + verb-ing", usage:"📌 Action in progress in the past, usually interrupted by a specific action. Narrative background. <em>was</em> → I/he/she/it · <em>were</em> → you/we/they",
+      desc:"Same -ing formation rules (see Present Continuous).",
+      examples:["<b>+</b> Subject + was/were + -ing: <em>She was cooking when you called.</em>","<span class='neg'>−</span> Subject + wasn't/weren't + -ing: <em>She wasn't sleeping at midnight.</em>","<span class='qst'>?</span> Was/Were + subject + -ing?: <em>Was she working when it happened?</em>"]},
+    pastpc:{ badge:"Past Perf. Continuous", formula:"had been + verb-ing", usage:"📌 Prolonged action in the past, prior to another past event. Emphasis on duration.",
+      desc:`Combines the 'past of the past' with continuous aspect. Always accompanied by another event in Simple Past.<br><b>-ing</b> rules (all Continuous tenses):<br>${ING_ENUM_EN}`,
+      examples:["<b>+</b> Subject + had been + -ing: <em>She had been waiting for an hour when the bus arrived.</em>","<span class='neg'>−</span> Subject + hadn't been + -ing: <em>He hadn't been sleeping well before the exam.</em>","<span class='qst'>?</span> Had + subject + been + -ing?: <em>Had she been studying all night?</em>"]},
+    pastperf:{ badge:"Past Perfect", formula:"had + past participle", usage:"📌 'Past of the past' — action completed BEFORE another action in Simple Past. Establishes chronological order.",
+      desc:"Use the <b>Past Participle</b> (pp column). Indicates something happened <em>before</em> another past event.",
+      examples:["<b>+</b> Subject + had + pp: <em>She had finished her homework before dinner.</em>","<span class='neg'>−</span> Subject + hadn't + pp: <em>He hadn't gone home until Peter came back.</em>","<span class='qst'>?</span> Had + subject + pp?: <em>Had you ever visited Argentina before our trip?</em>"]},
+    fs:{ badge:"Future Simple", formula:"will + base verb (unconjugated)", usage:"📌 Predictions, decisions made at the moment of speaking, promises, spontaneous offers. ⚠ will = immediate decision; going to = pre-made plan or visible evidence.",
+      desc:"Always the base form of the verb after <b>will</b>. Don't add -s or -ed. Applies to all subjects.",
+      examples:["<b>+</b> Subject + will + verb: <em>She will travel to Brazil next year.</em>","<span class='neg'>−</span> Subject + won't + verb: <em>She won't be late for the meeting.</em>","<span class='qst'>?</span> Will + subject + verb?: <em>Will she come to the party?</em>"]},
+    fc:{ badge:"Future Continuous", formula:"will be + verb-ing", usage:"📌 Action in progress at a specific point in the future.",
+      desc:"Same -ing formation rules (see Present Continuous).",
+      examples:["<b>+</b> Subject + will be + -ing: <em>She will be studying at 8 PM.</em>","<span class='neg'>−</span> Subject + won't be + -ing: <em>She won't be working tomorrow.</em>","<span class='qst'>?</span> Will + subject + be + -ing?: <em>Will she be waiting when we arrive?</em>"]},
+    fp:{ badge:"Future Perfect", formula:"will have + past participle", usage:"📌 Action that will be completed BEFORE a future milestone. Markers: by tomorrow, by 2030, by the time + clause.",
+      desc:"Use the <b>Past Participle</b> (pp column).",
+      examples:["<b>+</b> Subject + will have + pp: <em>She will have finished by noon.</em>","<span class='neg'>−</span> Subject + won't have + pp: <em>She won't have arrived by then.</em>","<span class='qst'>?</span> Will + subject + have + pp?: <em>Will she have left before we arrive?</em>"]},
+    fpc:{ badge:"Future Perf. Continuous", formula:"will have been + verb-ing", usage:"📌 Duration of an action up to a specific future point.",
+      desc:"Combines Future Perfect + Continuous. Same -ing formation rules.",
+      examples:["<b>+</b> Subject + will have been + -ing: <em>By 5 PM, she will have been working for 8 hours.</em>","<span class='neg'>−</span> Subject + won't have been + -ing: <em>She won't have been waiting long.</em>","<span class='qst'>?</span> Will + subject + have been + -ing?: <em>Will she have been studying for 3 hours?</em>"]}
+  }
+};
+
+// ── UI STRINGS ───────────────────────────────────────────────────────
+const I18N = {
+  en:{
+    subtitle:"Fill in every tense: Present, Past and Future.",
+    correct:"Correct:", wrong:"Wrong:", pending:"Pending:",
+    progLabel:(f,t)=>`${f} / ${t} filled`,
+    btnCheck:"✓ Check All", btnRulesOpen:"📖 View Rules", btnRulesClose:"✕ Close Rules",
+    btnReveal:"👁 Reveal Answers", btnReset:"↺ Reset",
+    verbsSuffix:"verbs",
+    rulesTitle:"📖 Filling Rules — Complete Reference",
+    legend:{base:"Base (given)", tr:"Translation", pres:"Present", past:"Past", fut:"Future", correct:"Correct", wrong:"Wrong"},
+    ghTr:"Translation",
+    th:{base:"Base", baseSub:"given", tr:"Translation (PT)", trSub:"fill in", psSub:"base+s/es/ies · 3rd person", pastSub:"fill in", ppSub:"fill in"},
+    basePHTranslation:"translation",
+    multiForm:(n)=>`form ${n}...`,
+    pracBtn:"📝 Practice", pracBtnClose:"✕ Close",
+    pracHint:"Fill in the correct tense — sentences refresh each time you open",
+    pracTitle:(base,level)=>`📝 Practice in sentences — <strong>${base}</strong> <span style="font-size:.6rem;opacity:.6">[${level}]</span>`,
+    pracPlaceholderMulti:"multiple...", pracPlaceholderSingle:"...",
+    pracFeedback:"Review the rule in the table above ↑",
+    pracStative:"⚠ Stative verb — this form is rarely used in real English",
+    stativeNote:"⚠ stative",
+    fbEmpty:"(empty)",
+    fbField:(n,v)=>`field ${n}: <em>"${v}"</em>`,
+    fbMultiNote:(n)=>`⚑ This field requires <strong>${n} forms</strong>.`,
+    fbUsage:"Usage", fbFormula:"Formula", fbRule:"Rule", fbExamples:"Examples",
+    confirmReveal:(lv)=>`This will reveal the answers for level ${lv}. Continue?`,
+    confirmReset:(lv)=>`Reset level ${lv}?`,
+    htmlLang:"en"
+  },
+  pt:{
+    subtitle:"Preencha todos os tempos verbais: Presente, Passado e Futuro.",
+    correct:"Corretos:", wrong:"Erros:", pending:"Pendentes:",
+    progLabel:(f,t)=>`${f} / ${t} preenchidos`,
+    btnCheck:"✓ Verificar Tudo", btnRulesOpen:"📖 Ver Regras", btnRulesClose:"✕ Fechar Regras",
+    btnReveal:"👁 Ver Respostas", btnReset:"↺ Resetar",
+    verbsSuffix:"verbos",
+    rulesTitle:"📖 Regras de Preenchimento — Referência Completa",
+    legend:{base:"Base (dado)", tr:"Tradução", pres:"Presente", past:"Passado", fut:"Futuro", correct:"Correto", wrong:"Erro"},
+    ghTr:"Tradução",
+    th:{base:"Base", baseSub:"dado", tr:"Tradução (PT)", trSub:"preencher", psSub:"base+s/es/ies · 3ª pessoa", pastSub:"preencher", ppSub:"preencher"},
+    basePHTranslation:"tradução",
+    multiForm:(n)=>`${n}ª forma...`,
+    pracBtn:"📝 Praticar", pracBtnClose:"✕ Fechar",
+    pracHint:"Complete com o tempo correto — frases renovam a cada abertura",
+    pracTitle:(base,level)=>`📝 Praticar em frases — <strong>${base}</strong> <span style="font-size:.6rem;opacity:.6">[${level}]</span>`,
+    pracPlaceholderMulti:"múltiplas...", pracPlaceholderSingle:"...",
+    pracFeedback:"Reveja a regra na tabela acima ↑",
+    pracStative:"⚠ Verbo estativo — esta forma é raramente usada no inglês real",
+    stativeNote:"⚠ estativo",
+    fbEmpty:"(vazio)",
+    fbField:(n,v)=>`campo ${n}: <em>"${v}"</em>`,
+    fbMultiNote:(n)=>`⚑ Este campo requer <strong>${n} formas</strong>.`,
+    fbUsage:"Uso", fbFormula:"Fórmula", fbRule:"Regra", fbExamples:"Exemplos",
+    confirmReveal:(lv)=>`Isso vai mostrar as respostas do nível ${lv}. Continuar?`,
+    confirmReset:(lv)=>`Resetar o nível ${lv}?`,
+    htmlLang:"pt-BR"
+  }
+};
+
+function safeGetLang(){
+  try { return localStorage.getItem('verbDrillLang'); } catch(e) { return null; }
+}
+function safeSetLang(lang){
+  try { localStorage.setItem('verbDrillLang', lang); } catch(e) { /* storage unavailable (e.g. file:// origin) */ }
+}
+
+let LANG = safeGetLang() || 'en';
 
 // ── LEVEL MANAGEMENT ────────────────────────────────────────────────
 const LEVELS = ['A2','B1','B2','C1'];
@@ -876,10 +936,19 @@ function setLevel(lv){
   render();
 }
 
+function updateLevelCounts(){
+  const t = I18N[LANG];
+  LEVELS.forEach(lv=>{
+    const n = VERBS.filter(v=>v[5]===lv).length;
+    const el = document.getElementById('lc-'+lv);
+    if(el) el.textContent = `${n} ${t.verbsSuffix}`;
+  });
+}
+
 function updateLevelUI(){
   LEVELS.forEach(lv => {
     const verbs = VERBS.filter(v=>v[5]===lv);
-    const totalCells = verbs.reduce((s,v,i)=>{
+    const totalCells = verbs.reduce((s,v)=>{
       const id=`r${VERBS.indexOf(v)}`;
       if(!states[id]) return s;
       return s + KEYS.reduce((ks,k)=>ks+(states[id][k]?states[id][k].length:1),0);
@@ -905,13 +974,14 @@ let totCorrect=0, totWrong=0;
 // ── NORMALIZE ────────────────────────────────────────────────────────
 function norm(s){
   return s.trim().toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
     .replace(/\s+/g," ");
 }
 
 // ── HELPERS ──────────────────────────────────────────────────────────
 function basePH(k){
-  return {tr:"tradução",ps:"ex: works",pc:"is ...",pperf:"has ...",ppc:"has been ...",
+  const t = I18N[LANG];
+  return {tr:t.basePHTranslation,ps:"ex: works",pc:"is ...",pperf:"has ...",ppc:"has been ...",
     past:"ex: went",pp:"ex: gone",pastc:"was ...",pastpc:"had been ...",pastperf:"had ...",
     fs:"will ...",fc:"will be ...",fp:"will have ...",fpc:"will have been ..."}[k]||"...";
 }
@@ -923,7 +993,6 @@ function getCellState(id,k){
   if(s.some(x=>x==="err"))    return "err";
   return "partial";
 }
-
 
 // ── SENTENCE TEMPLATES ───────────────────────────────────────────────
 // ___ = full tense form goes here (e.g. "has worked", "will be going")
@@ -955,13 +1024,14 @@ function checkPrac(el){
 }
 
 function togglePractice(id, btn){
+  const t = I18N[LANG];
   // Check if row already exists
   let prRow = document.getElementById('pr-'+id);
   if(prRow){
     const isOpen = prRow.classList.contains('open');
     prRow.classList.toggle('open', !isOpen);
     btn.classList.toggle('open', !isOpen);
-    btn.textContent = isOpen ? '📝 Praticar' : '✕ Fechar';
+    btn.textContent = isOpen ? t.pracBtn : t.pracBtnClose;
     return;
   }
 
@@ -970,6 +1040,7 @@ function togglePractice(id, btn){
   if(!verbEntry) return;
   const [base,past,pp,type,trRaw,level,isStative] = verbEntry;
   const ans = buildAnswers(base,past,pp,trRaw);
+  const labels = LABELS();
 
   // Pick 4 random tenses (always include past + one future at least)
   const pool = [...PRAC_TENSES].sort(()=>Math.random()-.5);
@@ -983,23 +1054,23 @@ function togglePractice(id, btn){
     const statWarn = isStative && PRAC_STATIVE_CONTS.has(k);
     return `
       <div class="prac-item">
-        <span class="prac-label ${BADGE[k]}">${LABELS[k]}</span>
+        <span class="prac-label ${BADGE[k]}">${labels[k]}</span>
         <div class="prac-sent">
           <span class="prac-part">${before.trim()}</span>
           <span class="prac-wrap">
             <input class="prac-inp" type="text"
               data-ans="${ansRaw}" data-key="${k}"
-              placeholder="${multi?'múltiplas...' : '...'}"
+              placeholder="${multi?t.pracPlaceholderMulti:t.pracPlaceholderSingle}"
               autocomplete="off" spellcheck="false"
               onblur="checkPrac(this)"
               onkeydown="if(event.key==='Enter'){checkPrac(this);this.blur()}"/>
             <span class="prac-ico ok">✓</span>
             <span class="prac-ico err">✗</span>
-            <span class="prac-feedback">Reveja a regra na tabela acima ↑</span>
+            <span class="prac-feedback">${t.pracFeedback}</span>
           </span>
           <span class="prac-part">${after.trim()}</span>
         </div>
-        ${statWarn?'<div class="prac-stative">⚠ Verbo estativo — esta forma é raramente usada no inglês real</div>':''}
+        ${statWarn?`<div class="prac-stative">${t.pracStative}</div>`:''}
       </div>`;
   }).join('');
 
@@ -1009,8 +1080,8 @@ function togglePractice(id, btn){
   prRow.id = 'pr-'+id;
   prRow.innerHTML = `<td colspan="16">
     <div class="prac-header">
-      <span class="prac-title">📝 Praticar em frases — <strong>${base}</strong> <span style="font-size:.6rem;opacity:.6">[${level}]</span></span>
-      <span class="prac-hint">Complete com o tempo correto — frases renovam a cada abertura</span>
+      <span class="prac-title">${t.pracTitle(base, level)}</span>
+      <span class="prac-hint">${t.pracHint}</span>
     </div>
     <div class="prac-grid">${itemsHTML}</div>
   </td>`;
@@ -1018,11 +1089,12 @@ function togglePractice(id, btn){
   const fbRow = document.getElementById('fb-'+id);
   fbRow.parentNode.insertBefore(prRow, fbRow.nextSibling);
   btn.classList.add('open');
-  btn.textContent = '✕ Fechar';
+  btn.textContent = t.pracBtnClose;
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────
 function render(){
+  const t = I18N[LANG];
   const tbody=document.getElementById("tbody");
   tbody.innerHTML="";
   const levelVerbs = VERBS.filter(v=>v[5]===currentLevel);
@@ -1043,19 +1115,19 @@ function render(){
     const tr=document.createElement("tr");
     tr.className="verb-row"; tr.dataset.id=id; tr.dataset.level=level;
     tr.innerHTML=`
-      <td class="td-n">${li+1}<button class="prac-btn" onclick="togglePractice('${id}',this)">📝 Praticar</button></td>
+      <td class="td-n">${li+1}<button class="prac-btn" onclick="togglePractice('${id}',this)">${t.pracBtn}</button></td>
       <td class="td-base">${base}<span class="lvl-badge lb-${level}">${level}</span></td>
       ${KEYS.map(k=>{
         const opts=ans[k].split(",").map(a=>a.trim()).filter(Boolean);
         const multi=opts.length>1;
         const showStatWarn = isStative && CONT_KEYS.has(k);
         return `<td class="ci ${GROUP[k]}${isLB(k)?" bdr-l":""}${showStatWarn?" stative-cell":""}">
-          ${showStatWarn?`<div class="stative-note">⚠ estativo</div>`:""}
+          ${showStatWarn?`<div class="stative-note">${t.stativeNote}</div>`:""}
           ${opts.map((opt,si)=>`
             <div class="sub-wrap">
               ${multi?`<span class="sub-num">${si+1}</span>`:""}
               <input id="${id}-${k}-${si}" type="text"
-                placeholder="${multi?`${si+1}ª forma...`:basePH(k)+"..."}"
+                placeholder="${multi?t.multiForm(si+1):basePH(k)+"..."}"
                 data-ans="${opt}" data-key="${k}" data-id="${id}" data-si="${si}"
                 autocomplete="off" spellcheck="false"
                 onblur="checkCell(this)"
@@ -1108,29 +1180,31 @@ function checkCell(el){
 
 // ── FEEDBACK ──────────────────────────────────────────────────────────
 function buildCard(id,k){
-  const h=HINTS[k];
+  const t = I18N[LANG];
+  const h=HINTS[LANG][k];
+  const labels = LABELS();
   const subs=states[id][k];
   const nForms=subs.length;
   const errLines=subs.map((s,si)=>{
     if(s!=="err") return null;
     const el=document.getElementById(`${id}-${k}-${si}`);
-    const v=el?el.value:"(vazio)";
-    return `campo ${si+1}: <em>"${v}"</em>`;
+    const v=el?el.value:t.fbEmpty;
+    return t.fbField(si+1, v);
   }).filter(Boolean).join(" · ");
   const multiNote=nForms>1
-    ?`<div class="fb-opts">⚑ Este campo requer <strong>${nForms} formas</strong>.</div>`:"";
+    ?`<div class="fb-opts">${t.fbMultiNote(nForms)}</div>`:"";
   return `
     <div class="fb-block">
       <div class="fb-top">
-        <span class="fb-badge ${BADGE[k]}">${LABELS[k]}</span>
+        <span class="fb-badge ${BADGE[k]}">${labels[k]}</span>
         <span class="fb-typed">${errLines}</span>
       </div>
       <div class="fb-body">
         ${multiNote}
-        <div class="fb-rt">Uso</div><div class="fb-usage">📌 ${h.usage}</div>
-        <div class="fb-rt">Fórmula</div><div class="fb-formula">${h.formula}</div>
-        <div class="fb-rt">Regra</div><div class="fb-desc">${h.desc}</div>
-        <div class="fb-rt" style="margin-top:5px">Exemplos</div>
+        <div class="fb-rt">${t.fbUsage}</div><div class="fb-usage">📌 ${h.usage}</div>
+        <div class="fb-rt">${t.fbFormula}</div><div class="fb-formula">${h.formula}</div>
+        <div class="fb-rt">${t.fbRule}</div><div class="fb-desc">${h.desc}</div>
+        <div class="fb-rt" style="margin-top:5px">${t.fbExamples}</div>
         <div class="fb-exs">${h.examples.map(e=>`<div class="fb-ex">${e.ex}</div>`).join("")}</div>
       </div>
     </div>`;
@@ -1147,8 +1221,9 @@ function updateFeedback(id){
 
 // ── META ──────────────────────────────────────────────────────────────
 function updateMeta(){
+  const t = I18N[LANG];
   const cellMap=new Map();
-  document.querySelectorAll("#tbody input").forEach(inp=>{
+  document.querySelectorAll("#tbody input:not(.prac-inp)").forEach(inp=>{
     const ck=`${inp.dataset.id}:${inp.dataset.key}`;
     if(!cellMap.has(ck)) cellMap.set(ck,[]);
     cellMap.get(ck).push(inp.value.trim());
@@ -1158,25 +1233,45 @@ function updateMeta(){
   document.getElementById("sc").textContent=totCorrect;
   document.getElementById("sw").textContent=totWrong;
   document.getElementById("sp").textContent=total-filled;
-  document.getElementById("prog-lbl").textContent=`${filled} / ${total} células preenchidas`;
+  document.getElementById("prog-lbl").textContent=t.progLabel(filled,total);
   document.getElementById("prog-fill").style.width=total?(filled/total*100)+"%":"0%";
+}
+
+// ── RULES PANEL ──────────────────────────────────────────────────────
+function renderRulesPanel(){
+  const data = RULES_DATA[LANG];
+  const grid = document.getElementById('rules-grid');
+  grid.innerHTML = KEYS.map(k=>{
+    const c = data[k];
+    return `
+    <div class="rcard">
+      <div class="rcard-head"><span class="rbadge ${BADGE[k]}">${c.badge}</span></div>
+      <div class="rformula">${c.formula}</div>
+      <div class="rusage">${c.usage}</div>
+      <div class="rdesc">${c.desc}</div>
+      <div class="rexs">${c.examples.map(ex=>`<div class="rex">${ex}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
 }
 
 // ── ACTIONS ───────────────────────────────────────────────────────────
 function toggleRules(){
+  const t = I18N[LANG];
   const p=document.getElementById("rules-panel"),b=document.getElementById("rules-btn");
-  b.textContent=p.classList.toggle("open")?"✕ Fechar Regras":"📖 Ver Regras";
+  const isOpen = p.classList.toggle("open");
+  b.textContent = isOpen ? t.btnRulesClose : t.btnRulesOpen;
 }
 
 function checkAll(){
-  document.querySelectorAll("#tbody input").forEach(el=>{
+  document.querySelectorAll("#tbody input:not(.prac-inp)").forEach(el=>{
     if(el.value.trim()) checkCell(el);
   });
 }
 
 function revealAll(){
-  if(!confirm("Isso vai mostrar as respostas do nível "+currentLevel+". Continuar?"))return;
-  document.querySelectorAll("#tbody input").forEach(el=>{
+  const t = I18N[LANG];
+  if(!confirm(t.confirmReveal(currentLevel)))return;
+  document.querySelectorAll("#tbody input:not(.prac-inp)").forEach(el=>{
     const lv = document.querySelector(`tr[data-id="${el.dataset.id}"]`).dataset.level;
     el.value=el.dataset.ans.split(",")[0];
     el.classList.remove("ok","err"); el.classList.add("ok");
@@ -1189,9 +1284,10 @@ function revealAll(){
 }
 
 function resetAll(){
-  if(!confirm("Resetar o nível "+currentLevel+"?"))return;
+  const t = I18N[LANG];
+  if(!confirm(t.confirmReset(currentLevel)))return;
   // Reset only current level's score
-  document.querySelectorAll("#tbody input").forEach(el=>{
+  document.querySelectorAll("#tbody input:not(.prac-inp)").forEach(el=>{
     el.value=""; el.className="";
     states[el.dataset.id][el.dataset.key][parseInt(el.dataset.si)]="empty";
   });
@@ -1201,6 +1297,49 @@ function resetAll(){
   updateMeta(); updateLevelUI();
 }
 
+// ── LANGUAGE TOGGLE ───────────────────────────────────────────────────
+function applyStaticI18N(){
+  const t = I18N[LANG];
+  document.documentElement.lang = t.htmlLang;
+  document.getElementById('hdr-sub').textContent = t.subtitle;
+  document.getElementById('lbl-correct').textContent = t.correct;
+  document.getElementById('lbl-wrong').textContent = t.wrong;
+  document.getElementById('lbl-pending').textContent = t.pending;
+  document.getElementById('btn-check').textContent = t.btnCheck;
+  document.getElementById('btn-reveal').textContent = t.btnReveal;
+  document.getElementById('btn-reset').textContent = t.btnReset;
+  const rulesPanel = document.getElementById('rules-panel');
+  document.getElementById('rules-btn').textContent = rulesPanel.classList.contains('open') ? t.btnRulesClose : t.btnRulesOpen;
+  document.getElementById('rules-title').textContent = t.rulesTitle;
+  document.getElementById('leg-base').textContent = t.legend.base;
+  document.getElementById('leg-tr').textContent = t.legend.tr;
+  document.getElementById('leg-pres').textContent = t.legend.pres;
+  document.getElementById('leg-past').textContent = t.legend.past;
+  document.getElementById('leg-fut').textContent = t.legend.fut;
+  document.getElementById('leg-correct').textContent = t.legend.correct;
+  document.getElementById('leg-wrong').textContent = t.legend.wrong;
+  document.getElementById('gh-tr').textContent = t.ghTr;
+  document.getElementById('th-base').innerHTML = `${t.th.base}<span class="th-sub" id="th-base-sub">${t.th.baseSub}</span>`;
+  document.getElementById('th-tr').innerHTML = `${t.th.tr}<span class="th-sub" id="th-tr-sub">${t.th.trSub}</span>`;
+  document.getElementById('th-ps').innerHTML = `Present Simple<span class="th-sub" id="th-ps-sub">${t.th.psSub}</span>`;
+  document.getElementById('th-past').innerHTML = `Simple Past<span class="th-sub" id="th-past-sub">${t.th.pastSub}</span>`;
+  document.getElementById('th-pp').innerHTML = `Past Participle<span class="th-sub" id="th-pp-sub">${t.th.ppSub}</span>`;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===LANG));
+  updateLevelCounts();
+}
+
+function setLang(lang){
+  LANG = lang;
+  safeSetLang(lang);
+  applyStaticI18N();
+  renderRulesPanel();
+  render();
+  updateLevelUI();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+applyStaticI18N();
+renderRulesPanel();
 render();
 updateLevelUI();
 </script>

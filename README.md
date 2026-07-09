@@ -3,6 +3,7 @@
 Interactive verb conjugation exercise with gamification, sentence practice, and IELTS/TOEFL vocabulary.
 
 ## Features
+- **Bilingual interface** — toggle between English (default) and Portuguese with the EN/PT switch in the header; the translation column always targets Portuguese regardless of the interface language
 - **114 verbs** organized by CEFR level (A2 · B1 · B2 · C1)
 - **12 tenses** including all Perfect Continuous forms
 - **Sentence practice** — mini exercises with contextual fill-in-the-blank
